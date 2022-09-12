@@ -1,0 +1,173 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+</head>
+<body th:fragment="questionnaireDetail">
+	<div th:with="caption=${questionnaireModel.caption}
+		, description=${questionnaireModel.description}
+		, startDate=${questionnaireModel.startDate}
+		, endDate=${questionnaireModel.endDate}
+		, isEnable=${questionnaireModel.isEnable}" 
+		id="questionnaire" 
+		class="tab-pane show active">
+	    <div class="row gy-3 p-3">
+	        <div class="col-md-8">
+	            <div class="row">
+	                <label for="txtCaption" class="col-sm-2 col-form-label">
+	                    問卷名稱：
+	                </label>
+	                <div class="col-sm-10">
+	                    <input id="txtCaption" th:value="${caption}" th:disabled="${isOverDateOrHasUser}" class="form-control" />
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class="col-md-8">
+	            <div class="row">
+	                <label for="txtDescription" class="col-sm-2 col-form-label">
+	                    描述內容：
+	                </label>
+	                <div class="col-sm-10">
+	                    <textarea id="txtDescription" th:text="${description}" th:disabled="${isOverDateOrHasUser}" class="form-control" rows="5"></textarea>
+	                </div>
+	            </div>
+	        </div>
+	        
+	        <div class="col-md-8">
+	            <div class="row">
+	                <label for="txtStartDate" class="col-sm-2 col-form-label">
+	                    開始時間：
+	                </label>
+	                <div class="col-sm-10">
+	                    <input id="txtStartDate" th:value="${startDate}" th:disabled="${isOverDateOrHasUser}" class="form-control" />
+	                </div>
+	            </div>
+	        </div>
+	        
+	        <div class="col-md-8">
+	            <div class="row">
+	                <label for="txtEndDate" class="col-sm-2 col-form-label">
+	                    結束時間：
+	                </label>
+	                <div class="col-sm-10">
+	                    <input id="txtEndDate" th:value="${endDate}" th:disabled="${isOverDateOrHasUser}" class="form-control" />
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class="col-md-8">
+	            <label for="ckbIsEnable">
+	                <input type="checkbox" id="ckbIsEnable" th:checked="${isEnable}" th:disabled="${isOverDateOrHasUser}" />
+	                已啟用
+	            </label>
+	        </div>
+	
+	        <div class="col-md-8">
+	            <div class="d-flex align-items-center justify-content-end gap-1">
+	                <th:block th:replace="components/ucCancelButton :: ucCancelButton"></th:block>
+	                <th:block th:replace="components/ucSubmitButton :: ucSubmitButton"></th:block>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<div id="question" class="tab-pane">
+	    <div class="row gy-3 p-3">
+	        <div class="col-md-8">
+	            <div class="row">
+	                <label for="ddlCategoryList" class="col-sm-2 col-form-label">
+	                    種類：
+	                </label>
+	                <div class="col-sm-10 align-self-center">
+	                    <select id="ddlCategoryList" th:disabled="${isOverDateOrHasUser}"></select>
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class="col-md-8">
+	            <div class="row">
+	                <label for="txtQuestionName" class="col-sm-2 col-form-label">
+	                    問題：
+	                </label>
+	                <div class="col-sm-4">
+	                    <input id="txtQuestionName" th:disabled="${isOverDateOrHasUser}" class="form-control" />
+	                </div>
+	                <div class="col-sm-6 align-self-center">
+	                    <div class="d-flex align-items-center gap-3">
+	                        <select id="ddlTypingList" th:disabled="${isOverDateOrHasUser}"></select>
+	                        <label for="ckbQuestionRequired">
+	                            <input type="checkbox" id="ckbQuestionRequired" th:disabled="${isOverDateOrHasUser}" />
+	                            必選
+	                        </label>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class="col-md-8">
+	            <div class="row">
+	                <label for="txtQuestionAnswer" class="col-sm-2 col-form-label">
+	                    回答：
+	                </label>
+	                <div class="col-sm-4">
+	                    <input id="txtQuestionAnswer" th:disabled="${isOverDateOrHasUser}" class="form-control" />
+	                </div>
+	                <div class="col-sm-6 align-self-center">
+	                    <div class="d-flex align-items-center gap-3">
+	                        <div class="d-flex align-items-center justify-content-center">
+	                            <h5>(多個答案以 <b>;</b> 分隔)</h5>
+	                        </div>
+	                        <button id="btnAddQuestion" th:disabled="${isOverDateOrHasUser}" class="btn btn-success">加入</button>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class="col-md-8">
+	            <button id="btnDeleteQuestion" th:disabled="${isOverDateOrHasUser}" class="btn btn-danger mt-md-5">刪除</button>
+	        </div>
+	
+	        <div class="col-md-8">
+	            <div id="divQuestionListContainer">
+	            	<th:block th:replace="subFragments/questionList :: questionList"></th:block>
+	            </div>
+	        </div>
+	
+	        <div class="col-md-8">
+	            <div class="d-flex align-items-center justify-content-end gap-1">
+	                <th:block th:replace="components/ucCancelButton :: ucCancelButton"></th:block>
+	                <th:block th:replace="components/ucSubmitButton :: ucSubmitButton"></th:block>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<div id="question-info" class="tab-pane">
+	    <div class="d-flex flex-column gap-3 p-3">
+        	<div id="btnDownloadDataToCSVContainer" class="w-auto">
+        		<a id="aLinkDownloadDataToCSV" class="btn btn-info">匯出</a>
+        	</div>
+        	
+        	<div id="divUserListContainer"></div>
+        	
+        	<div id="divUserListPagerContainer"></div>
+        	
+        	<div id="divUserAnswerDetailContainer"></div>
+	    </div>
+	</div>
+	
+	<div id="statistics" class="tab-pane">
+	    <div th:classappend="${userListModel != null 
+	    	and !userListModel.empty 
+	    	and userAnswerListModel != null 
+	    	and !userAnswerListModel.empty 
+	    	? '' 
+	    	: 'p-3'}">
+	        <div id="divStatisticsContainer">
+	        	<th:block th:replace="subFragments/statistics :: statistics"></th:block>
+	        </div>
+	    </div>
+	</div>
+</body>
+</html>

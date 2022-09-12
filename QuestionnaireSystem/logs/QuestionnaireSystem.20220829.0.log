@@ -1,0 +1,54 @@
+03:36:44.065 INFO  [main][QuestionnaireSystemApplication.logStarting(StartupInfoLogger.java:55)] Starting QuestionnaireSystemApplication using Java 11.0.14.1 on Accelerator with PID 14912 (D:\Project_Java\QuestionnaireSystem\bin\main started by Kids-Andy in D:\Project_Java\QuestionnaireSystem)
+03:36:44.069 INFO  [main][QuestionnaireSystemApplication.logStartupProfileInfo(SpringApplication.java:634)] No active profile set, falling back to 1 default profile: "default"
+03:36:44.726 INFO  [main][RepositoryConfigurationDelegate.registerRepositoriesIn(RepositoryConfigurationDelegate.java:132)] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+03:36:44.820 INFO  [main][RepositoryConfigurationDelegate.registerRepositoriesIn(RepositoryConfigurationDelegate.java:201)] Finished Spring Data repository scanning in 82 ms. Found 7 JPA repository interfaces.
+03:36:45.736 INFO  [main][TomcatWebServer.initialize(TomcatWebServer.java:108)] Tomcat initialized with port(s): 8889 (http)
+03:36:45.745 INFO  [main][Http11NioProtocol.log(DirectJDKLog.java:173)] Initializing ProtocolHandler ["http-nio-8889"]
+03:36:45.746 INFO  [main][StandardService.log(DirectJDKLog.java:173)] Starting service [Tomcat]
+03:36:45.747 INFO  [main][StandardEngine.log(DirectJDKLog.java:173)] Starting Servlet engine: [Apache Tomcat/9.0.65]
+03:36:45.856 INFO  [main][[/].log(DirectJDKLog.java:173)] Initializing Spring embedded WebApplicationContext
+03:36:45.856 INFO  [main][ServletWebServerApplicationContext.prepareWebApplicationContext(ServletWebServerApplicationContext.java:292)] Root WebApplicationContext: initialization completed in 1737 ms
+03:36:46.036 INFO  [main][HikariDataSource.getConnection(HikariDataSource.java:110)] HikariPool-1 - Starting...
+03:36:46.214 INFO  [main][HikariDataSource.getConnection(HikariDataSource.java:123)] HikariPool-1 - Start completed.
+03:36:46.276 INFO  [main][LogHelper.logPersistenceUnitInformation(LogHelper.java:31)] HHH000204: Processing PersistenceUnitInfo [name: default]
+03:36:46.326 INFO  [main][Version.logVersion(Version.java:44)] HHH000412: Hibernate ORM core version 5.6.10.Final
+03:36:46.469 INFO  [main][Version.<clinit>(JavaReflectionManager.java:56)] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+03:36:46.609 INFO  [main][Dialect.<init>(Dialect.java:175)] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+03:36:47.175 INFO  [main][JtaPlatformInitiator.initiateService(JtaPlatformInitiator.java:52)] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+03:36:47.185 INFO  [main][LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:437)] Initialized JPA EntityManagerFactory for persistence unit 'default'
+03:36:47.888 WARN  [main][JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor(JpaBaseConfiguration.java:219)] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+03:36:48.229 INFO  [main][Http11NioProtocol.log(DirectJDKLog.java:173)] Starting ProtocolHandler ["http-nio-8889"]
+03:36:48.252 INFO  [main][TomcatWebServer.start(TomcatWebServer.java:220)] Tomcat started on port(s): 8889 (http) with context path ''
+03:36:48.261 INFO  [main][QuestionnaireSystemApplication.logStarted(StartupInfoLogger.java:61)] Started QuestionnaireSystemApplication in 4.592 seconds (JVM running for 5.256)
+03:36:50.574 INFO  [http-nio-8889-exec-1][[/].log(DirectJDKLog.java:173)] Initializing Spring DispatcherServlet 'dispatcherServlet'
+03:36:50.575 INFO  [http-nio-8889-exec-1][DispatcherServlet.initServletBean(FrameworkServlet.java:525)] Initializing Servlet 'dispatcherServlet'
+03:36:50.584 INFO  [http-nio-8889-exec-1][DispatcherServlet.initServletBean(FrameworkServlet.java:547)] Completed initialization in 9 ms
+03:36:52.591 WARN  [http-nio-8889-exec-4][SessionIdGeneratorBase.log(DirectJDKLog.java:173)] Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [226] milliseconds.
+03:36:52.590 WARN  [http-nio-8889-exec-5][SessionIdGeneratorBase.log(DirectJDKLog.java:173)] Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [225] milliseconds.
+03:38:18.200 INFO  [main][QuestionnaireSystemApplication.logStarting(StartupInfoLogger.java:55)] Starting QuestionnaireSystemApplication using Java 11.0.14.1 on Accelerator with PID 1920 (D:\Project_Java\QuestionnaireSystem\bin\main started by Kids-Andy in D:\Project_Java\QuestionnaireSystem)
+03:38:18.205 INFO  [main][QuestionnaireSystemApplication.logStartupProfileInfo(SpringApplication.java:634)] No active profile set, falling back to 1 default profile: "default"
+03:38:18.865 INFO  [main][RepositoryConfigurationDelegate.registerRepositoriesIn(RepositoryConfigurationDelegate.java:132)] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+03:38:18.964 INFO  [main][RepositoryConfigurationDelegate.registerRepositoriesIn(RepositoryConfigurationDelegate.java:201)] Finished Spring Data repository scanning in 81 ms. Found 7 JPA repository interfaces.
+03:38:19.871 INFO  [main][TomcatWebServer.initialize(TomcatWebServer.java:108)] Tomcat initialized with port(s): 8889 (http)
+03:38:19.883 INFO  [main][Http11NioProtocol.log(DirectJDKLog.java:173)] Initializing ProtocolHandler ["http-nio-8889"]
+03:38:19.884 INFO  [main][StandardService.log(DirectJDKLog.java:173)] Starting service [Tomcat]
+03:38:19.885 INFO  [main][StandardEngine.log(DirectJDKLog.java:173)] Starting Servlet engine: [Apache Tomcat/9.0.65]
+03:38:19.998 INFO  [main][[/].log(DirectJDKLog.java:173)] Initializing Spring embedded WebApplicationContext
+03:38:19.998 INFO  [main][ServletWebServerApplicationContext.prepareWebApplicationContext(ServletWebServerApplicationContext.java:292)] Root WebApplicationContext: initialization completed in 1739 ms
+03:38:20.194 INFO  [main][HikariDataSource.getConnection(HikariDataSource.java:110)] HikariPool-1 - Starting...
+03:38:20.377 INFO  [main][HikariDataSource.getConnection(HikariDataSource.java:123)] HikariPool-1 - Start completed.
+03:38:20.437 INFO  [main][LogHelper.logPersistenceUnitInformation(LogHelper.java:31)] HHH000204: Processing PersistenceUnitInfo [name: default]
+03:38:20.479 INFO  [main][Version.logVersion(Version.java:44)] HHH000412: Hibernate ORM core version 5.6.10.Final
+03:38:20.631 INFO  [main][Version.<clinit>(JavaReflectionManager.java:56)] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+03:38:20.760 INFO  [main][Dialect.<init>(Dialect.java:175)] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+03:38:21.322 INFO  [main][JtaPlatformInitiator.initiateService(JtaPlatformInitiator.java:52)] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+03:38:21.329 INFO  [main][LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:437)] Initialized JPA EntityManagerFactory for persistence unit 'default'
+03:38:22.036 WARN  [main][JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor(JpaBaseConfiguration.java:219)] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+03:38:22.362 INFO  [main][Http11NioProtocol.log(DirectJDKLog.java:173)] Starting ProtocolHandler ["http-nio-8889"]
+03:38:22.384 INFO  [main][TomcatWebServer.start(TomcatWebServer.java:220)] Tomcat started on port(s): 8889 (http) with context path ''
+03:38:22.392 INFO  [main][QuestionnaireSystemApplication.logStarted(StartupInfoLogger.java:61)] Started QuestionnaireSystemApplication in 4.594 seconds (JVM running for 5.171)
+03:38:24.372 INFO  [http-nio-8889-exec-2][[/].log(DirectJDKLog.java:173)] Initializing Spring DispatcherServlet 'dispatcherServlet'
+03:38:24.374 INFO  [http-nio-8889-exec-2][DispatcherServlet.initServletBean(FrameworkServlet.java:525)] Initializing Servlet 'dispatcherServlet'
+03:38:24.381 INFO  [http-nio-8889-exec-2][DispatcherServlet.initServletBean(FrameworkServlet.java:547)] Completed initialization in 4 ms
+03:38:26.264 WARN  [http-nio-8889-exec-10][SessionIdGeneratorBase.log(DirectJDKLog.java:173)] Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [243] milliseconds.
+03:38:26.264 WARN  [http-nio-8889-exec-2][SessionIdGeneratorBase.log(DirectJDKLog.java:173)] Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [243] milliseconds.

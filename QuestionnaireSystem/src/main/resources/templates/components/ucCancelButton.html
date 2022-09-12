@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<th:block th:fragment="ucCancelButtonHead">
+		<script th:src="@{/js/components/variables/ucCancelButtonVariable.js}"></script>
+	    <script th:src="@{/js/components/ucCancelButton.js}"></script>
+	</th:block>
+</head>
+<body>
+	<button th:fragment="ucCancelButton" class="btnUcCancel btn btn-secondary">取消</button>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+    <title>前台 - 問卷填寫</title>
+    <link rel="stylesheet" th:href="@{/css/front.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}" />
+    <script th:src="@{/js/jquery/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap/bootstrap.min.js}"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script th:src="@{/js/variables/globalVariable.js}"></script>
+    <script th:src="@{/js/functions/globalFunction.js}"></script>
+    <script th:src="@{/js/variables/frontVariable.js}"></script>
+    <script th:src="@{/js/enums/enum.js}"></script>
+    <script th:src="@{/js/utils/util.js}"></script>
+    <!-- components -->
+    <th:block th:replace="components/ucPager :: ucPagerHead"></th:block>
+    <th:block th:replace="components/ucCancelButton :: ucCancelButtonHead"></th:block>
+    <th:block th:replace="components/ucSubmitButton :: ucSubmitButtonHead"></th:block>
+    <!-- ---------- -->
+    <script th:src="@{/js/functions/questionnaireListFunction.js}"></script>
+	<script th:src="@{/js/questionnaireList.js}"></script>
+    <script th:src="@{/js/functions/answeringQuestionnaireDetailFunction.js}"></script>
+	<script th:src="@{/js/answeringQuestionnaireDetail.js}"></script>
+    <script th:src="@{/js/variables/checkingQuestionnaireDetailVariable.js}"></script>
+	<script th:src="@{/js/checkingQuestionnaireDetail.js}"></script>
+	<script th:src="@{/js/functions/questionnaireStatisticsFunction.js}"></script>
+	<script th:src="@{/js/questionnaireStatistics.js}"></script>
+	<script th:inline="javascript">
+	   var message = /*[[${errorMessage}]]*/"";
+	   if(message != null) alert(message);
+	</script>
+</head>
+<body>
+    <div id="frontContainer" class="row align-items-center justify-content-center g-0 gy-3 p-3">
+        <div class="col-md-11">
+            <h1>前台 - 問卷填寫</h1>
+        </div>
+		
+		<th:block th:if="${isQuestionnaireList}">
+	        <div id="frontSidebar" class="col-md-2">
+	            <div class="w-auto">
+	                <a class="btn btn-info text-white" th:href="@{/backAdmin/questionnaireList}">後台 - 問卷管理</a>
+	            </div>
+	        </div>
+		</th:block>
+
+        <main id="frontMain" th:classappend="${isQuestionnaireList} ? 'col-md-8 offset-md-3' : 'col-md-10'">
+			<th:block th:replace="${'fragments/' + fragmentName} :: ${fragmentName}"></th:block>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+</head>
+<body th:fragment="answeringQuestionList">
+	<p th:if="${questionListModel == null or questionListModel.empty}">尚未有資料。</p>
+	
+    <div th:if="${questionListModel != null and !questionListModel.empty}" 
+    	class="row align-items-center justify-content-center gy-3 gy-md-5">
+	    <div th:each="question, questionStat : ${questionListModel}" 
+	    	th:with="questionIndex=${questionStat.index}
+			, questionId=${question.getQuestionId()}
+			, questionTyping=${question.getQuestionTyping()}
+			, questionName=${question.getQuestionName()}
+			, questionRequired=${question.getQuestionRequired()} 
+			, questionAnswerList=${#strings.arraySplit(question.getQuestionAnswer(), ';')}"
+			class="col-12">
+	        <div class="d-flex flex-column">
+	            <h3>[[${questionIndex + 1} 
+		            	+ '. ' 
+		            	+ ${questionRequired ? '必填' : ''}]]
+            	</h3>
+            	
+            	<div class="d-flex flex-column gap-3">
+            		<div th:each="questionAnswer, questionAnswerStat 
+            			: ${questionAnswerList}"
+            			th:with="questionAnswerIndex=${questionAnswerStat.index}"
+            			th:classappend="${questionTyping == '文字' ? 'row' : 'form-check'}">
+	            		<th:block th:if="${questionTyping == '單選方塊'}">
+	                        <input th:id="'rdoQuestionAnswer_' 
+	                        	+ ${questionId + '_'} 
+	                        	+ ${questionAnswerIndex + 1}" 
+	                        	th:name="'rdoQuestionAnswer_' + ${questionId}" 
+	                        	th:required="${questionRequired}"
+	                        	th:checked="${question.getEachUserAnswer(questionAnswerIndex, questionId, userAnswerListModel)}"
+	                        	class="form-check-input" 
+	                        	type="radio" />
+	                        <label th:for="'rdoQuestionAnswer_' 
+		                        + ${questionId + '_'} 
+		                        + ${questionAnswerIndex + 1}" 
+		                        class="form-check-label">
+	                            [[${questionAnswer}]]
+	                        </label>
+	            		</th:block>
+	            	
+	            		<th:block th:if="${questionTyping == '複選方塊'}">
+                            <input th:id="'ckbQuestionAnswer_' 
+                            	+ ${questionId + '_'} 
+                            	+ ${questionAnswerIndex + 1}" 
+                            	th:required="${questionRequired}"
+                            	th:checked="${question.getEachUserAnswer(questionAnswerIndex, questionId, userAnswerListModel)}"
+                            	class="form-check-input" 
+                            	type="checkbox" />
+                            <label th:for="'ckbQuestionAnswer_' 
+                            	+ ${questionId + '_'} 
+                            	+ ${questionAnswerIndex + 1}"
+                            	 class="form-check-label">
+                                [[${questionAnswer}]]
+                            </label>
+	            		</th:block>
+	            	
+	            		<th:block th:if="${questionTyping == '文字'}">
+                            <label th:for="'txtQuestionAnswer_' 
+                            	+ ${questionId + '_'} 
+                            	+ ${questionAnswerIndex + 1}"
+                           		 class="col-sm-2 col-form-label">
+                                [[${questionAnswer}]]
+                            </label>
+                            <div class='col-sm-10'>
+                                <input th:id="'txtQuestionAnswer_' 
+                                	+ ${questionId + '_'} 
+                                	+ ${questionAnswerIndex + 1}" 
+                                	th:required="${questionRequired}"
+                                	th:value="${question.getEachUserAnswer(questionAnswerIndex, questionId, userAnswerListModel)}"
+                                	class="form-control" 
+                                	type="text" />
+                            </div>
+	            		</th:block>
+                    </div>
+				</div>            	
+	        </div>
+	    </div>
+    </div>
+</body>
+</html>

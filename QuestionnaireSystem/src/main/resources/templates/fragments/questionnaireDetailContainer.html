@@ -1,0 +1,32 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+</head>
+<body th:fragment="questionnaireDetailContainer">
+	<div id="backAdminQuestionnaireDetailContainer">
+	    <div class="row align-items-center justify-content-center gy-3">
+	        <div class="col-md-10">
+	            <ul id="ulQuestionnaireDetailTabs" class="nav nav-tabs">
+	                <li class="nav-item">
+	                    <a class="nav-link active" data-bs-toggle="tab" href="#questionnaire">問卷</a>
+	                </li>
+	                <li class="nav-item">
+	                    <a class="nav-link" data-bs-toggle="tab" href="#question">問題</a>
+	                </li>
+	                <li class="nav-item">
+	                    <a class="nav-link" data-bs-toggle="tab" href="#question-info">使用者列表</a>
+	                </li>
+	                <li class="nav-item">
+	                    <a class="nav-link" data-bs-toggle="tab" href="#statistics">統計</a>
+	                </li>
+	            </ul>
+	
+	            <div class="tab-content">
+	                <th:block th:replace="fragments/questionnaireDetail :: questionnaireDetail"></th:block>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</body>
+</html>

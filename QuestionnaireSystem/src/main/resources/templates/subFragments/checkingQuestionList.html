@@ -1,0 +1,56 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+</head>
+<body th:fragment="checkingQuestionList">
+	<p th:if="${userAnswerListModel == null or userAnswerListModel.empty}">尚未有資料。</p>
+	
+    <div th:if="${userAnswerListModel != null and !userAnswerListModel.empty}"
+    	class="row align-items-center justify-content-center gy-3 gy-md-5">
+	    <div th:each="question, questionStat : ${questionListModel}"
+	    	th:with="questionIndex=${questionStat.index}
+			, questionId=${question.getQuestionId()}
+			, questionTyping=${question.getQuestionTyping()}
+			, questionName=${question.getQuestionName()}
+			, questionRequired=${question.getQuestionRequired()} 
+			, questionAnswerList=${#strings.arraySplit(question.getQuestionAnswer(), ';')}"
+	    	class="col-12">
+	        <div class="d-flex flex-column">
+	            <h3>[[${questionIndex + 1} 
+		            	+ '. ' 
+		            	+ ${questionRequired ? '必填' : ''}]]
+            	</h3>
+            	
+            	<div class="d-flex flex-column gap-3">
+	            	<div class="d-flex flex-column gap-3">
+		            	<th:block th:each="userAnswer, userAnswerStat 
+ 		            		: ${userAnswerListModel}"
+ 		            		th:with="uaQuestionId=${userAnswer.getQuestionId()}
+							, uaQuestionTyping=${userAnswer.getQuestionTyping()}
+							, uaAnswerNum=${userAnswer.getAnswerNum()}
+							, uaAnswer=${userAnswer.getAnswer()}">
+		            		<h5 th:if="${uaQuestionTyping == '文字' 
+		            			and uaQuestionId == questionId}" 
+		            			th:id="'questionAnswer_' 
+		            			+ ${uaQuestionId + '_'} 
+		            			+ ${uaAnswerNum}">
+                                [[${questionAnswerList[__${uaAnswerNum - 1}__] + ': '}]]
+                                [[${uaAnswer}]]
+                               </h5>
+                               
+                               <h5 th:if="${uaQuestionTyping != '文字' 
+                               	and uaQuestionId == questionId}" 
+                               	th:id="'questionAnswer_' 
+                               		+ ${uaQuestionId + '_'} 
+                               		+ ${uaAnswerNum}">
+                               	[[${questionAnswerList[__${uaAnswerNum - 1}__]}]]
+                               </h5>
+		            	</th:block>
+					</div>    
+				</div>        	
+	        </div>
+	    </div>
+    </div>
+</body>
+</html>

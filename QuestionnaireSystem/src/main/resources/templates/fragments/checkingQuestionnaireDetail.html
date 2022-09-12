@@ -1,0 +1,80 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+</head>
+<body th:fragment="checkingQuestionnaireDetail">
+	<div id="questionnaireDetailContainer">
+        <div class="row align-items-center justify-content-center gy-3 gy-md-5">
+            <div class="col-md-10">
+                <div class="d-flex flex-column align-items-end justify-content-center mb-3 mb-md-5">
+                    <h4>[[${questionnaireModel.isEnable ? '投票中' : '已結束'}]]</h4>
+                    <h4>
+                    	[[${questionnaireModel.startDate} 
+                    		+ ' ~ ' 
+                    		+ ${questionnaireModel.endDate == null 
+                    			? '未知' 
+                    			: questionnaireModel.endDate}]]
+           			</h4>
+                </div>
+
+                <div class="d-flex flex-column align-items-center justify-content-center mb-3 mb-md-5">
+                    <h1>[[${questionnaireModel.caption}]]</h1>
+                    <h2>[[${questionnaireModel.description}]]</h2>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div id="questionnaireUserForm">
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">
+                            姓名
+                        </label>
+                        <div class="col-sm-10 align-self-center">
+                            [[${userModel.userName}]]
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">
+                            手機
+                        </label>
+                        <div class="col-sm-10">
+                        	[[${userModel.phone}]]
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">
+                            Email
+                        </label>
+                        <div class="col-sm-10">
+                        	[[${userModel.email}]]
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">
+                            年齡
+                        </label>
+                        <div class="col-sm-10">
+                        	[[${userModel.age}]]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <th:block th:replace="subFragments/checkingQuestionList :: checkingQuestionList"></th:block>
+            </div>
+
+            <div class="col-md-10">
+                <div class="d-flex align-item-center justify-content-end gap-1">
+                    <button id="btnUpdate" class="btn btn-secondary">修改</button>
+                    <th:block th:replace="components/ucSubmitButton :: ucSubmitButton"></th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<th:block th:fragment="ucSubmitButtonHead">
+		<script th:src="@{/js/components/variables/ucSubmitButtonVariable.js}"></script>
+		<script th:src="@{/js/components/functions/ucSubmitButtonFunction.js}"></script>
+	    <script th:src="@{/js/components/ucSubmitButton.js}"></script>
+	</th:block>
+</head>
+<body>
+	<button th:fragment="ucSubmitButton" 
+		th:disabled="${isOverDateOrHasUser != null and isOverDateOrHasUser}" 
+		class="btnUcSubmit btn btn-primary">
+		送出
+	</button>
+</body>
+</html>

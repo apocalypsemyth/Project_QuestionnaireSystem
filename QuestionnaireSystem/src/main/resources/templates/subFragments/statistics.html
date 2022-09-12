@@ -1,0 +1,96 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+</head>
+<body th:fragment="statistics">
+   	<p th:if="${userListModel == null 
+   		or userListModel.empty 
+   		or userAnswerListModel == null 
+   		or userAnswerListModel.empty 
+   		or questionListModel == null 
+   		or questionListModel.empty}">
+   		尚未有使用者的回答。
+	</p>
+	
+	<div th:if="${userListModel != null 
+		and !userListModel.empty 
+		and userAnswerListModel != null 
+		and !userAnswerListModel.empty 
+		and questionListModel != null 
+		and !questionListModel.empty}" 
+		id="divUserAnswerInnerContainer" 
+		class="row gy-3">
+		<div class="row gy-3">
+			<div class="col-md-10">
+				<div id="divStatisticsInnerContainer" class="row gy-3">
+					<div th:each="question, questionStat 
+					: ${questionListModel}" 
+					th:with="questionIndex=${questionStat.index}
+					, questionId=${question.getQuestionId()}
+					, questionTyping=${question.getQuestionTyping()}
+					, questionName=${question.getQuestionName()}
+					, questionRequired=${question.getQuestionRequired()} 
+					, questionAnswerList=${#strings.arraySplit(question.getQuestionAnswer(), ';')}"
+					 th:id="${questionId}" class="col-12">
+						<div class="d-flex flex-column">
+							<h3>
+								[[${questionIndex + 1} 
+									+ '. ' 
+									+ ${questionName} 
+									+ ${questionRequired ? '(必填)' : ''}]]
+							</h3>
+							
+							<th:block th:with="answerNumStatMap
+									=${question.getAnswerNumStatMap(questionId, userAnswerListModel)}
+									, answerNumTotal
+									=${question.getAnswerNumTotal(answerNumStatMap)}">
+								<th:block th:each="questionAnswer, questionAnswerStat 
+									: ${questionAnswerList}" 
+									th:with="questionAnswerIndex=${questionAnswerStat.index}
+									, eachUserAnswerStatMap
+									=${question.getEachUserAnswerStatMap(questionAnswerIndex, answerNumStatMap, answerNumTotal)}
+									, eachUserAnswerPercentage
+									=${eachUserAnswerStatMap.eachUserAnswerPercentage}
+									, eachUserAnswerTotal
+									=${eachUserAnswerStatMap.eachUserAnswerTotal}">
+									<div th:if="${questionTyping == '單選方塊'}" class="form-check">
+										<label th:for="'rdoQuestionAnswer_' 
+											+ ${questionId + '_'} 
+											+ ${questionAnswerIndex + 1}" 
+											class="form-check-label"> 
+			                                [[${questionAnswer}]]
+			                                [[${eachUserAnswerPercentage}]]
+			                                [['(' + ${eachUserAnswerTotal} + ')']]
+			                            </label>
+			                        </div>
+									
+									<div th:if="${questionTyping == '複選方塊'}" class="form-check">
+										<label th:for="'ckbQuestionAnswer_' 
+											+ ${questionId + '_'} 
+											+ ${questionAnswerIndex + 1}" 
+											class="form-check-label">
+			                                [[${questionAnswer}]]
+			                                [[${eachUserAnswerPercentage}]]
+			                                [['(' + ${eachUserAnswerTotal} + ')']]
+			                            </label>
+			                        </div>
+			
+									<div th:if="${questionTyping == '文字'}" class="form-check">
+			                            <label th:for="'txtQuestionAnswer_' 
+			                            	+ ${questionId + '_'} 
+			                            	+ ${questionAnswerIndex + 1}" 
+			                            	class="form-check-label">
+			                                [[${questionAnswer} + ' - ']]
+			                            </label>
+			                        </div>
+								</th:block>
+							</th:block>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<th:block th:fragment="ucPagerHead">
+	    <script th:src="@{/js/components/variables/ucPagerVariable.js}"></script>
+		<script th:src="@{/js/components/functions/ucPagerFunction.js}"></script>
+		<script th:src="@{/js/components/ucPager.js}"></script>
+	</th:block>
+</head>
+<body>
+	<div th:fragment="ucPager" id="divUcPagerContainer"></div>
+</body>
+</html>

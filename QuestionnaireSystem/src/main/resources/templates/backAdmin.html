@@ -1,0 +1,59 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>後台 - 問卷管理</title>
+    <link rel="stylesheet" th:href="@{/css/backAdmin/backAdmin.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}" />
+    <script th:src="@{/js/jquery/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap/bootstrap.min.js}"></script>
+    <script th:src="@{/js/variables/globalVariable.js}"></script>
+    <script th:src="@{/js/functions/globalFunction.js}"></script>
+    <script th:src="@{/js/backAdmin/variables/backAdminVariable.js}"></script>
+    <script th:src="@{/js/backAdmin/functions/backAdminFunction.js}"></script>
+    <script th:src="@{/js/enums/enum.js}"></script>
+    <script th:src="@{/js/utils/util.js}"></script>
+    <!-- components -->
+    <th:block th:replace="components/ucPager :: ucPagerHead"></th:block>
+    <th:block th:replace="components/ucCancelButton :: ucCancelButtonHead"></th:block>
+    <th:block th:replace="components/ucSubmitButton :: ucSubmitButtonHead"></th:block>
+    <!-- ---------- -->
+    <script th:src="@{/js/backAdmin/functions/questionnaireListFunction.js}"></script>
+	<script th:src="@{/js/backAdmin/questionnaireList.js}"></script>
+    <script th:src="@{/js/backAdmin/functions/questionnaireDetailFunction.js}"></script>
+    <script th:src="@{/js/backAdmin/questionnaireDetail.js}"></script>
+    <script th:src="@{/js/backAdmin/functions/commonQuestionListFunction.js}"></script>
+	<script th:src="@{/js/backAdmin/commonQuestionList.js}"></script>
+    <script th:src="@{/js/backAdmin/functions/commonQuestionDetailFunction.js}"></script>
+	<script th:src="@{/js/backAdmin/commonQuestionDetail.js}"></script>
+	<script th:inline="javascript">
+	   var message = /*[[${errorMessage}]]*/"";
+	   if(message != null) alert(message);
+	</script>
+</head>
+<body>
+    <div id="backAdminContainer" class="row align-items-center justify-content-center g-0 gy-3 p-3">
+        <div class="col-md-11">
+            <h1>後台 - 問卷管理</h1>
+        </div>
+
+        <div id="backAdminSidebar" class="col-md-2">
+            <div class="d-flex flex-column">
+            	<div>
+	                <a th:href="@{/backAdmin/questionnaireList}">問卷管理</a>
+            	</div>
+            	<div>
+	                <a th:href="@{/backAdmin/commonQuestionList}">常用問題管理</a>
+            	</div>
+                <div class="w-auto mt-3 mt-md-5">
+                    <a class="btn btn-info text-white" th:href="@{/questionnaireList}">前台 - 問卷填寫</a>
+                </div>
+			</div>
+        </div>
+
+        <main class="col-md-8 offset-md-3">
+			<th:block th:replace="${'fragments/' + fragmentName} :: ${fragmentName}"></th:block>
+        </main>
+    </div>
+</body>
+</html>

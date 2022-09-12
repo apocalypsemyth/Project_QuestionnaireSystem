@@ -1,0 +1,86 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+</head>
+<body th:fragment="dataList">
+	<div th:id="${dataListModel.isBackAdmin} 
+		? (${dataListModel.isQuestionnaire} 
+			? 'backAdminQuestionnaireListContainer' 
+			: 'backAdminCommonQuestionListContainer') 
+		: 'questionnaireListContainer'">
+        <div class="row gy-3">
+            <div class="col-md-8">
+                <div class="row">
+                    <label for="txtKeyword" class="col-sm-2 col-form-label">
+                        問卷標題：
+                    </label>
+                    <div class="col-sm-8">
+                        <input id="txtKeyword" class="form-control" />
+                    </div>
+                    
+                    <th:block th:if="${!dataListModel.isQuestionnaire}">
+	            		<div class="col-sm-2 align-self-center offset-10 mt-3 offset-sm-0 mt-sm-0">
+	                        <button id="btnSearchCommonQuestionList" 
+	                        	class="btn btn-primary">
+	                        	搜尋
+	                        </button>
+						</div>
+	            	</th:block>
+                </div>
+            </div>
+
+            <div th:if="${dataListModel.isQuestionnaire}" class="col-md-8">
+                <div th:classappend="${dataListModel.isBackAdmin} ? '' : 'mb-md-5'" 
+                	class="row">
+                    <label for="txtStartDate" class="col-sm-2 col-form-label">
+                        開始 / 結束：
+                    </label>
+                    <div class="col-sm-4">
+                        <input id="txtStartDate" class="form-control" placeholder="輸入格式 (yyyy/MM/dd)" />
+                    </div>
+                    <div class="col-sm-4">
+                        <input id="txtEndDate" class="form-control" placeholder="輸入格式 (yyyy/MM/dd)" />
+                    </div>
+                    <div class="col-sm-2 align-self-center offset-10 mt-3 offset-sm-0 mt-sm-0">
+                        <button id="btnSearchQuestionnaireList" 
+                        	class="btn btn-primary">
+                        	搜尋
+                        </button>
+					</div>
+                </div>
+            </div>
+			
+			<th:block th:if="${dataListModel.isBackAdmin}">
+	            <div class="col-md-8">
+	                <div class="d-flex gap-1 mt-3 mt-md-5">
+	                    <button th:id="${dataListModel.isQuestionnaire} 
+		                    ? 'btnDeleteQuestionnaireList' 
+		                    : 'btnDeleteCommonQuestionList'" 
+		                    class="btn btn-danger"
+	                    >
+	                    	刪除
+	                    </button>
+	                    <a th:id="${dataListModel.isQuestionnaire} 
+		                    ? 'aLinkCreateQuestionnaire' 
+		                    : 'aLinkCreateCommonQuestion'" class="btn btn-success"
+	                    >
+		                    新增
+	                    </a>
+	                </div>
+	            </div>
+			</th:block>
+
+            <div class="col-md-10">
+                <div th:id="${dataListModel.isQuestionnaire} 
+					? 'divQuestionnaireListContainer' 
+					: 'divCommonQuestionListContainer'"></div>
+            </div>
+
+            <div class="col-md-8">
+                <th:block th:replace="components/ucPager :: ucPager"></th:block>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
