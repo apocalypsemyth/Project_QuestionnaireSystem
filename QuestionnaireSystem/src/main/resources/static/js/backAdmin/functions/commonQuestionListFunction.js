@@ -120,7 +120,7 @@ function GetCommonQuestionList(strQueryString) {
                 page_index } = objArrCommonQuestion;
             $(divCommonQuestionListContainer).empty();
             $(divUcPagerContainer).empty();
-			EnableControlByHasData(true, false, total_data, total_rows);
+			EnableControlByHasData(true, false, common_question_list, total_data, total_rows);
 			
             if (status_code === RtnInfo.FAILED.statusCode
                 || message === RtnInfo.FAILED.message) {

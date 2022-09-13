@@ -69,10 +69,11 @@ function CheckSearchQuestionnaireInputs(objSearchQuestionnaire) {
  * @param Number 全部資料總數
  * @param Number 資料總數
  */
-function EnableControlByHasData(boolIsBackAdmin, boolIsQuestionnaire, intTotalData, intTotalRows) {
+function EnableControlByHasData(boolIsBackAdmin, boolIsQuestionnaire, objArrData, intTotalData, intTotalRows) {
+	let hasData = (!objArrData || !objArrData.length) ? false : true;
 	let hasTotalData = isNaN(intTotalData) ? false : intTotalData === 0 ? false : true;
 	let hasTotalRows = isNaN(intTotalRows) ? false : intTotalRows === 0 ? false : true;
-	if (hasTotalData && hasTotalRows) {
+	if (hasData && hasTotalData && hasTotalRows) {
 		let isDisabled = false;
 		if (boolIsBackAdmin && boolIsQuestionnaire) {
 			$(btnSearchQuestionnaireList).attr("disabled", isDisabled);
@@ -87,17 +88,16 @@ function EnableControlByHasData(boolIsBackAdmin, boolIsQuestionnaire, intTotalDa
 		}
 	}
 	else {
-		let isDisabled = true;
 		if (boolIsBackAdmin && boolIsQuestionnaire) {
 			$(btnSearchQuestionnaireList).attr("disabled", !hasTotalData);
-			$(btnDeleteQuestionnaireList).attr("disabled", isDisabled);
+			$(btnDeleteQuestionnaireList).attr("disabled", !hasData);
 		}
 		else if (boolIsQuestionnaire) {
 			$(btnSearchQuestionnaireList).attr("disabled", !hasTotalData);
 		}
 		else {
 			$(btnSearchCommonQuestionList).attr("disabled", !hasTotalData);
-			$(btnDeleteCommonQuestionList).attr("disabled", isDisabled);
+			$(btnDeleteCommonQuestionList).attr("disabled", !hasData);
 		}
 	}
 }
@@ -234,7 +234,7 @@ function GetQuestionnaireList(strQueryString, boolIsBackAdmin) {
                 page_index } = objArrQuestionnaire;
             $(divQuestionnaireListContainer).empty();
             $(divUcPagerContainer).empty();
-            EnableControlByHasData(boolIsBackAdmin, true, total_data, total_rows);
+            EnableControlByHasData(boolIsBackAdmin, true, questionnaire_list, total_data, total_rows);
 
             if (status_code === RtnInfo.FAILED.statusCode
                 || message === RtnInfo.FAILED.message) {
