@@ -66,15 +66,15 @@ public interface DataTransactionalService {
 			) throws Exception;
 	
 	/**
-	 * 檢查是否為合法的QueryString。
+	 * 檢查是否為合法的QueryString，藉由是否為問卷列表頁面(false為常用問題列表、null為都不是)。
 	 * @param HttpServletRequest request
-	 * @param boolean 是否為問卷列表頁面
+	 * @param Boolean 是否為問卷列表頁面
 	 * @return boolean 是否為合法的QueryString
 	 * @throws 檢查是否為合法的QueryString時，發生錯誤。
 	 */
 	public boolean isValidQueryString(
 			HttpServletRequest request,
-			boolean isQuestionnaire
+			Boolean isQuestionnaire
 			) throws Exception;
 	
 	/**
@@ -87,6 +87,16 @@ public interface DataTransactionalService {
 	public boolean isOverDateOrHasUser(
 			QuestionnaireSession questionnaireSession, 
 			List<User> userListInSession
+			) throws Exception;
+	
+	/**
+	 * 檢查更新模式時，被問卷套用的初始常用問題是否仍存在，藉由問題Session列表。
+	 * @param List 問題Session列表
+	 * @return boolean 被問卷套用的初始常用問題是否仍存在
+	 * @throws 檢查更新模式時，被問卷套用的初始常用問題是否仍存在時，發生錯誤。
+	 */
+	public Boolean hasOriginalCommonQuestionThatSetByQuestionnaire(
+			List<QuestionSession> questionSessionList
 			) throws Exception;
 	
 	/**

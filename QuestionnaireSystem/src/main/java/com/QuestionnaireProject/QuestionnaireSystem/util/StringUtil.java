@@ -27,6 +27,23 @@ public class StringUtil {
 		}
 		
 		/**
+		 * 檢查目標字串是否以特定字串結尾，藉由目標字串和特定字串。
+		 * @param String 目標字串
+		 * @param String 特定字串
+		 * @return boolean 目標字串是否以特定字串結尾
+		 */
+		public static boolean isEndWithSpecial(String string, String special) {
+			if (!StringUtils.hasText(string)) return false;
+			
+			String pattern = ".*" + special + "$";
+			Pattern p = Pattern.compile(pattern);
+			Matcher m = p.matcher(string);
+			if (!m.matches()) return false;
+			
+			return true;
+		}
+		
+		/**
 		 * 檢查目標字串是否可轉換為的UUID。
 		 * @param String 目標字串
 		 * @return boolean 目標字串是否可轉換為UUID

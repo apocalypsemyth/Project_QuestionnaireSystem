@@ -2,6 +2,7 @@ package com.QuestionnaireProject.QuestionnaireSystem.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -42,10 +44,9 @@ import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.QuestionnaireSes
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.TypingService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.UserAnswerService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.UserService;
-import com.QuestionnaireProject.QuestionnaireSystem.util.StringUtil;
 
 @Controller
-@RequestMapping(UrlConstant.Key.BACK_ADMIN)
+@RequestMapping(UrlConstant.Path.BACK_ADMIN)
 public class BackAdminController {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -81,12 +82,40 @@ public class BackAdminController {
 	private TypingService typingService;
 	
 	@Autowired
-	private DataTransactionalService dataTansactionalService;
+	private DataTransactionalService dataTransactionalService;
 	
 	@Autowired
 	private ModelService modelService;
 	
-	@GetMapping(UrlConstant.Key.QUESTIONNAIRE_LIST)
+	@GetMapping("/{anyPath}")
+	public String getBackAdminAnyPath(
+			@PathVariable String anyPath
+			) {
+		if (anyPath.equals(UrlConstant.Path.QUESTIONNAIRE_LIST)) {
+			return UrlConstant.Control.REDIRECT 
+					+ UrlConstant.Path.BACK_ADMIN 
+					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
+		}
+		else if (anyPath.equals(UrlConstant.Path.QUESTIONNAIRE_DETAIL)) {
+			return UrlConstant.Control.REDIRECT 
+					+ UrlConstant.Path.BACK_ADMIN 
+					+ UrlConstant.Path.QUESTIONNAIRE_DETAIL;
+		}
+		else if (anyPath.equals(UrlConstant.Path.COMMON_QUESTION_LIST)) {
+			return UrlConstant.Control.REDIRECT 
+					+ UrlConstant.Path.BACK_ADMIN 
+					+ UrlConstant.Path.COMMON_QUESTION_LIST;
+		}
+		else if (anyPath.equals(UrlConstant.Path.COMMON_QUESTION_DETAIL)) {
+			return UrlConstant.Control.REDIRECT 
+					+ UrlConstant.Path.BACK_ADMIN 
+					+ UrlConstant.Path.COMMON_QUESTION_DETAIL;
+		}
+		else
+			return UrlConstant.Path.NOT_FOUND;
+	}
+	
+	@GetMapping(UrlConstant.Path.QUESTIONNAIRE_LIST)
 	public String getBackAdminQuestionnaireList(
 			Model model,
 			RedirectAttributes redirectAttributes
@@ -107,23 +136,38 @@ public class BackAdminController {
 			logger.error(e.getMessage());
 			redirectAttributes.addFlashAttribute(ModelConstant.Key.ERROR_MESSAGE, ModelConstant.Value.FAILED);
 			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Key.BACK_ADMIN 
-					+ UrlConstant.Key.QUESTIONNAIRE_LIST;
+					+ UrlConstant.Path.BACK_ADMIN 
+					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
 		}
-		return UrlConstant.Key.BACK_ADMIN;
+		return UrlConstant.Path.BACK_ADMIN;
 	}
 	
-	@GetMapping(UrlConstant.Key.QUESTIONNAIRE_DETAIL)
+	@GetMapping(UrlConstant.Path.QUESTIONNAIRE_DETAIL)
 	public String getBackAdminQuestionnaireDetail(
 			HttpSession session,
 			Model model, 
 			RedirectAttributes redirectAttributes,
-			@RequestParam(value = "ID", required = false) String questionnaireIdStr
+			@RequestParam(value = UrlConstant.QueryParam.ID, required = false) String questionnaireIdStr,
+			HttpServletRequest request
 			) throws Exception {
-		Boolean isUpdateMode = StringUtils.hasText(questionnaireIdStr);
-		session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, isUpdateMode);
+		Boolean isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
+		if (isUpdateMode == null) 
+			session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, StringUtils.hasText(questionnaireIdStr));
+		else 
+			session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, isUpdateMode);
+		isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
 		Boolean isSetQuestionListOfCommonQuestion = (Boolean) session.getAttribute(SessionConstant.Name.IS_SET_QUESTION_LIST_OF_COMMON_QUESTION);
 		try {
+			if (isUpdateMode == null)
+				throw new Exception("isUpdateMode session is null");
+			boolean isValidQueryString = 
+					dataTransactionalService.isValidQueryString(request, null);
+			if (isUpdateMode && !StringUtils.hasText(request.getQueryString())) {
+				throw new Exception("Query string must be have in update mode");
+			}
+			if (!isValidQueryString)
+				throw new Exception("Query string is invalid");
+			
 			model = modelService.setFragmentName(model, ModelConstant.Value.QUESTIONNAIRE_DETAIL_CONTAINER);
 			// For questionList.html aLink
 			model = modelService.setDataListModel(model, null, true);
@@ -168,9 +212,6 @@ public class BackAdminController {
 			List<UserAnswer> userAnswerListInSession = 
 					userAnswerService.getUserAnswerList(session);
 			if (isUpdateMode) {
-				if (!StringUtil.Func.isValidUUID(questionnaireIdStr)) {
-					throw new Exception(RtnInfo.FAILED.getMessage());
-				}
 				if (questionnaireSession != null 
 						&& !questionnaireSession.getQuestionnaireId().toString().equals(questionnaireIdStr)) {
 					throw new Exception(RtnInfo.FAILED.getMessage());
@@ -212,15 +253,37 @@ public class BackAdminController {
 			isSetQuestionListOfCommonQuestion = 
 					questionSessionService
 					.isSetQuestionListOfCommonQuestion(questionSessionList, isUpdateMode);
+			if (isUpdateMode && isSetQuestionListOfCommonQuestion) {
+				Boolean originalCommonQuestionThatSetByQuestionnaire = 
+						dataTransactionalService
+						.hasOriginalCommonQuestionThatSetByQuestionnaire(questionSessionList);
+				if (originalCommonQuestionThatSetByQuestionnaire != null 
+						&& !originalCommonQuestionThatSetByQuestionnaire) {
+					isSetQuestionListOfCommonQuestion = originalCommonQuestionThatSetByQuestionnaire;
+					List<Question> questionList = 
+							questionService.getQuestionList(questionnaireIdStr, true);
+					if (questionList == null) {
+						throw new Exception(RtnInfo.NOT_FOUND.getMessage());
+					}
+					List<QuestionSession> builtQuestionSessionList = 
+							questionSessionService.getQuestionSessionList(questionList);
+					questionSessionService.setQuestionSessionList(session, builtQuestionSessionList);
+					questionSessionList = 
+							questionSessionService.getQuestionSessionList(session);
+					if (questionSessionList == null) {
+						throw new Exception(RtnInfo.FAILED.getMessage());
+					} 
+				}
+			}
 			session.setAttribute(
 					SessionConstant.Name.IS_SET_QUESTION_LIST_OF_COMMON_QUESTION, 
 					isSetQuestionListOfCommonQuestion
 					);
 			boolean isOverDateOrHasUser = 
-					dataTansactionalService
+					dataTransactionalService
 					.isOverDateOrHasUser(questionnaireSession, userListInSession);
 			model = modelService.setIsOverDateOrHasUser(model, isOverDateOrHasUser);
-
+			
 			model = modelService.setQuestionnaireModel(model, questionnaireSession);
 			model = modelService.setQuestionListModelWithQuestionSession(model, questionSessionList);
 			model = modelService.setUserListModel(model, userListInSession);
@@ -229,13 +292,13 @@ public class BackAdminController {
 			logger.error(e.getMessage());
 			redirectAttributes.addFlashAttribute(ModelConstant.Key.ERROR_MESSAGE, ModelConstant.Value.FAILED);
 			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Key.BACK_ADMIN 
-					+ UrlConstant.Key.QUESTIONNAIRE_LIST;
+					+ UrlConstant.Path.BACK_ADMIN 
+					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
 		}
-		return UrlConstant.Key.BACK_ADMIN;
+		return UrlConstant.Path.BACK_ADMIN;
 	}
 	
-	@GetMapping(UrlConstant.Key.COMMON_QUESTION_LIST)
+	@GetMapping(UrlConstant.Path.COMMON_QUESTION_LIST)
 	public String getBackAdminCommonQuestionList(
 			Model model,
 			RedirectAttributes redirectAttributes
@@ -247,22 +310,37 @@ public class BackAdminController {
 			logger.error(e.getMessage());
 			redirectAttributes.addFlashAttribute(ModelConstant.Key.ERROR_MESSAGE, ModelConstant.Value.FAILED);
 			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Key.BACK_ADMIN 
-					+ UrlConstant.Key.COMMON_QUESTION_LIST;
+					+ UrlConstant.Path.BACK_ADMIN 
+					+ UrlConstant.Path.COMMON_QUESTION_LIST;
 		}
-		return UrlConstant.Key.BACK_ADMIN;
+		return UrlConstant.Path.BACK_ADMIN;
 	}
 	
-	@GetMapping(UrlConstant.Key.COMMON_QUESTION_DETAIL)
+	@GetMapping(UrlConstant.Path.COMMON_QUESTION_DETAIL)
 	public String getBackAdminCommonQuestionDetail(
 			HttpSession session, 
 			Model model, 
 			RedirectAttributes redirectAttributes,
-			@RequestParam(value = "ID", required = false) String commonQuestionIdStr
+			@RequestParam(value = UrlConstant.QueryParam.ID, required = false) String commonQuestionIdStr,
+			HttpServletRequest request
 			) throws Exception {
-		Boolean isUpdateMode = StringUtils.hasText(commonQuestionIdStr);
-		session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, isUpdateMode);
+		Boolean isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
+		if (isUpdateMode == null) 
+			session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, StringUtils.hasText(commonQuestionIdStr));
+		else 
+			session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, isUpdateMode);
+		isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
 		try {
+			if (isUpdateMode == null)
+				throw new Exception("isUpdateMode session is null");
+			boolean isValidQueryString = 
+					dataTransactionalService.isValidQueryString(request, null);
+			if (isUpdateMode && !StringUtils.hasText(request.getQueryString())) {
+				throw new Exception("Query string must be have in update mode");
+			}
+			if (!isValidQueryString)
+				throw new Exception("Query string is invalid");
+			
 			model = modelService.setFragmentName(model, ModelConstant.Value.COMMON_QUESTION_DETAIL);
 			// For questionList.html aLink
 			model = modelService.setDataListModel(model, null, false);
@@ -303,9 +381,6 @@ public class BackAdminController {
 			List<QuestionSession> questionSessionList = 
 					questionSessionService.getQuestionSessionList(session);
 			if (isUpdateMode) {
-				if (!StringUtil.Func.isValidUUID(commonQuestionIdStr)) {
-					throw new Exception(RtnInfo.FAILED.getMessage());
-				}
 				if (commonQuestionSession != null 
 						&& !commonQuestionSession.getCommonQuestionId().toString().equals(commonQuestionIdStr)) {
 					throw new Exception(RtnInfo.FAILED.getMessage());
@@ -339,10 +414,10 @@ public class BackAdminController {
 			logger.error(e.getMessage());
 			redirectAttributes.addFlashAttribute(ModelConstant.Key.ERROR_MESSAGE, ModelConstant.Value.FAILED);
 			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Key.BACK_ADMIN 
-					+ UrlConstant.Key.COMMON_QUESTION_LIST;
+					+ UrlConstant.Path.BACK_ADMIN 
+					+ UrlConstant.Path.COMMON_QUESTION_LIST;
 		}
-		return UrlConstant.Key.BACK_ADMIN;
+		return UrlConstant.Path.BACK_ADMIN;
 	}
 	
 }

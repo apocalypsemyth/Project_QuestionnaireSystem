@@ -9,6 +9,23 @@ function SetContainerSession(strSelector, strSessionName) {
     sessionStorage.setItem(strSessionName, strHtml);
 }
 
+// 問卷和常用問題列表頁面方法
+function DeleteIsUpdateModeSession() {
+	$.ajax({
+        url: `${JAVA_SERVICE_DOMAIN}/deleteIsUpdateModeSession`,
+        method: METHOD_GET,
+        success: function (strIsDeleted) {
+            if (strIsDeleted === "false") {
+                alert(RtnInfo.FAILED.message);
+			}
+        },
+        error: function (msg) {
+            console.log(msg);
+            alert(errorMessageOfAjax);
+        },
+    });
+}
+
 // 問卷和常用問題詳細頁面方法
 /**
  * 創建問題種類Html，藉由問題種類陣列。

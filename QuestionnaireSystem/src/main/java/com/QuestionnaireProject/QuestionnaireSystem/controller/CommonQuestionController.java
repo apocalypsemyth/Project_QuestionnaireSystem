@@ -142,7 +142,7 @@ public class CommonQuestionController {
 			boolean isValidQueryString = 
 					dataTransactionalService.isValidQueryString(request, false);
 			if (!isValidQueryString) 
-				throw new Exception("query string is invalid");
+				throw new Exception("Query string is invalid");
 			
 			totalData = commonQuestionService.getCommonQuestionTotal();
 			DataListForPager commonQuestionListObj = 

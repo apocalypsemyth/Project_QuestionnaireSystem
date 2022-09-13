@@ -379,6 +379,23 @@ public class DataTransactionalController {
 				);
 	}
 	
+	@GetMapping(value = "/deleteIsUpdateModeSession")
+	
+	public String deleteIsUpdateModeSession(HttpSession session) {
+		String isDeleted = "true";
+		try {
+			Boolean isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
+			if (isUpdateMode == null) return isDeleted;
+			
+			session.removeAttribute(SessionConstant.Name.IS_UPDATE_MODE);
+			return isDeleted;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			isDeleted = "false";
+			return isDeleted;
+		}
+	}
+	
 	@GetMapping(value = "/deleteQuestionnaireSession")
 	
 	public String deleteQuestionnaireSession(HttpSession session) {

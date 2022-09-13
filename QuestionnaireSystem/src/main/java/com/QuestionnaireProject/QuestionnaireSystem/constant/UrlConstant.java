@@ -5,7 +5,7 @@ public class UrlConstant {
 	/**
 	 * òHúlèÌù…ÅB
 	 */
-	public static class Key {
+	public static class Path {
 		
 		public static final String ROOT = "/";
 		
@@ -20,10 +20,6 @@ public class UrlConstant {
 		/** Key of front and backAdmin */
 		public static final String QUESTIONNAIRE_LIST = "/questionnaireList";
 
-		public static final String HANDLE_NOT_FOUND_1 = "/*";
-
-		public static final String HANDLE_NOT_FOUND_2 = "/**";
-
 		public static final String NOT_FOUND = "/notFound";
 		/** */
 		
@@ -34,6 +30,34 @@ public class UrlConstant {
 		public static final String COMMON_QUESTION_LIST = "/commonQuestionList";
 		
 		public static final String COMMON_QUESTION_DETAIL = "/commonQuestionDetail";
+		
+	}
+	
+	public static class QueryParam {
+		
+		public static final String INDEX = "index";
+		
+		public static final String KEYWORD = "keyword";
+
+		public static final String START_DATE = "startDate";
+		
+		public static final String END_DATE = "endDate";
+		
+		public static final String ID = "ID";
+		
+	}
+	
+	public static class Sign {
+		
+		public static final String EQUAL = "=";
+		
+		public static final String AMPERSAND = "&";
+		
+	}
+	
+	public static class Hash {
+		
+		public static final String STATISTICS = "#statistics";
 		
 	}
 	

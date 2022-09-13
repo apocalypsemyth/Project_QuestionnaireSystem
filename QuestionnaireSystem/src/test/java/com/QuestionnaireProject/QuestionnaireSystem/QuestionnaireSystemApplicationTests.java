@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 //import org.junit.jupiter.api.BeforeAll;
@@ -79,7 +81,7 @@ class QuestionnaireSystemApplicationTests {
 	public static final String QUESTIONNAIRE_ID = "461b8512-5738-4b7a-b0f8-7c6e917893f1";
 	
 	@Test
-	public void testGetAnswerNumStatMap() throws Exception {
+	public void getAnswerNumStatMap() throws Exception {
 		List<Question> questionList = 
 				questionService.getQuestionList(QUESTIONNAIRE_ID, true);
 		List<UserAnswer> userAnswerList = 
@@ -204,6 +206,16 @@ class QuestionnaireSystemApplicationTests {
 		LocalDateTime testDate = LocalDateTime.of(2022, 9, 2, 12, 00);
 		LocalDateTime nowDate = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
 		System.out.println(testDate.isAfter(nowDate));
+	}
+	
+	@Test
+	public void testRegexQueryString() {
+		String queryString = "ID=123";
+		String pattern = ".*#statistics$";
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(queryString);
+		if (m.matches()) System.out.println(true);
+		else System.out.println(false);
 	}
 	
 }

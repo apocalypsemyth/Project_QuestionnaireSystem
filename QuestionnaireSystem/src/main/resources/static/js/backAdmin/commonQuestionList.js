@@ -4,6 +4,7 @@ $(document).ready(function () {
 	}
 	else {
 		$(window).on("beforeunload", function () {
+			DeleteIsUpdateModeSession();
 			DeleteCommonQuestionSession();
 		});
 		

@@ -144,7 +144,7 @@ public class QuestionnaireController {
 			boolean isValidQueryString = 
 					dataTransactionalService.isValidQueryString(request, true);
 			if (!isValidQueryString) 
-				throw new Exception("query string is invalid");
+				throw new Exception("Query string is invalid");
 			
 			totalData = questionnaireService.getQuestionnaireTotal();
 			DataListForPager questionnaireListObj = 

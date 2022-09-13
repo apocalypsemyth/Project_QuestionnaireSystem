@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import com.QuestionnaireProject.QuestionnaireSystem.constant.DataConstant;
+import com.QuestionnaireProject.QuestionnaireSystem.constant.UrlConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.Category;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.CommonQuestion;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.Question;
@@ -290,7 +292,7 @@ public class DataTransactionalServiceImpl implements DataTransactionalService {
 	@Override
 	public boolean isValidQueryString(
 			HttpServletRequest request,
-			boolean isQuestionnaire
+			Boolean isQuestionnaire
 			) throws Exception {
 		String queryString = request.getQueryString();
 		if (!StringUtils.hasText(queryString)) return true;
@@ -299,9 +301,11 @@ public class DataTransactionalServiceImpl implements DataTransactionalService {
 		
 		Map<String, String[]> paramMap = request.getParameterMap();
 		List<String> paramKeyListOfTemplate = 
-				isQuestionnaire 
-					? List.of("index", "keyword", "startDate", "endDate") 
-					: List.of("index", "keyword");
+				isQuestionnaire == null 
+					? List.of(UrlConstant.QueryParam.ID) 
+					: isQuestionnaire == true 
+						? List.of(UrlConstant.QueryParam.INDEX, UrlConstant.QueryParam.KEYWORD, UrlConstant.QueryParam.START_DATE, UrlConstant.QueryParam.END_DATE) 
+						: List.of(UrlConstant.QueryParam.INDEX, UrlConstant.QueryParam.KEYWORD);
 		List<String> paramKeyList = 
 				paramMap
 				.keySet()
@@ -332,33 +336,48 @@ public class DataTransactionalServiceImpl implements DataTransactionalService {
 		for (int i = 0; i < paramKeyListOfResult.size(); i++) {
 			queryStringOfResult += 
 					paramKeyListOfResult.get(i) 
-					+ "=" 
+					+ UrlConstant.Sign.EQUAL 
 					+ paramValueList.get(i) 
-					+ "&";
+					+ UrlConstant.Sign.AMPERSAND;
+		}
+		if (isQuestionnaire == null) {
+			boolean isEndWithSpecial = StringUtil.Func.isEndWithSpecial(queryString, UrlConstant.Hash.STATISTICS);
+			if (isEndWithSpecial) {
+				if (queryStringOfResult.length() - 1 + UrlConstant.Hash.STATISTICS.length() != queryString.length()) return false;
+				String uuidStr = paramValueList.get(0);
+				boolean isValidUUID = StringUtil.Func.isValidUUID(uuidStr);
+				if (!isValidUUID) return false;
+				return true;
+			}
+			if (queryStringOfResult.length() - 1 != queryString.length()) return false;
+			String uuidStr = paramValueList.get(0);
+			boolean isValidUUID = StringUtil.Func.isValidUUID(uuidStr);
+			if (!isValidUUID) return false;
+			return true;
 		}
 		if (queryStringOfResult.length() - 1 != queryString.length()) return false;
 		
-		if (queryString.contains("index=")) {
-			if (!StringUtils.hasText(request.getParameter("index"))) return false;
+		if (queryString.contains(UrlConstant.QueryParam.INDEX + UrlConstant.Sign.EQUAL)) {
+			if (!StringUtils.hasText(request.getParameter(UrlConstant.QueryParam.INDEX))) return false;
 			
-			if (queryString.contains("keyword=")) {
-				if (queryString.contains("startDate") 
-						|| queryString.contains("endDate") 
-						|| !StringUtils.hasText(request.getParameter("keyword"))) {
+			if (queryString.contains(UrlConstant.QueryParam.KEYWORD + UrlConstant.Sign.EQUAL)) {
+				if (queryString.contains(UrlConstant.QueryParam.START_DATE) 
+						|| queryString.contains(UrlConstant.QueryParam.END_DATE) 
+						|| !StringUtils.hasText(request.getParameter(UrlConstant.QueryParam.KEYWORD))) {
 					return false;
 				}
 				else
 					return true;
 			}
-			else if (queryString.contains("startDate=") 
-					|| queryString.contains("endDate=")) {
-				if (!(queryString.contains("startDate=") 
-					&& queryString.contains("endDate="))) {
+			else if (queryString.contains(UrlConstant.QueryParam.START_DATE + UrlConstant.Sign.EQUAL) 
+					|| queryString.contains(UrlConstant.QueryParam.END_DATE + UrlConstant.Sign.EQUAL)) {
+				if (!(queryString.contains(UrlConstant.QueryParam.START_DATE + UrlConstant.Sign.EQUAL) 
+					&& queryString.contains(UrlConstant.QueryParam.END_DATE + UrlConstant.Sign.EQUAL))) {
 					return false;
 				}
-				if (queryString.contains("keyword") 
-						|| !StringUtils.hasText(request.getParameter("startDate")) 
-						|| !StringUtils.hasText(request.getParameter("endDate"))) {
+				if (queryString.contains(UrlConstant.QueryParam.KEYWORD) 
+						|| !StringUtils.hasText(request.getParameter(UrlConstant.QueryParam.START_DATE)) 
+						|| !StringUtils.hasText(request.getParameter(UrlConstant.QueryParam.END_DATE))) {
 					return false;
 				}
 				else
@@ -390,6 +409,53 @@ public class DataTransactionalServiceImpl implements DataTransactionalService {
 					? false 
 					: true;
 			return (isOverDate || hasUser);
+		} catch (Exception e) {
+			throw new Exception(e);
+		}
+	}
+	
+	@Override
+	@Transactional
+	public Boolean hasOriginalCommonQuestionThatSetByQuestionnaire(
+			List<QuestionSession> questionSessionList
+			) throws Exception {
+		try {
+			List<QuestionSession> originalQuestionSessionList = 
+					questionSessionList
+					.stream()
+					.filter(item -> !item.getIsCreated() 
+							&& !item.getIsUpdated() 
+							&& !item.getIsDeleted())
+					.collect(Collectors.toList());
+			if (originalQuestionSessionList == null 
+					|| originalQuestionSessionList.isEmpty()) return null;
+			
+			
+			QuestionSession originalQuestionSession = originalQuestionSessionList.get(0);
+			UUID commonQuestionId = originalQuestionSession.getCommonQuestionId();
+			if (commonQuestionId == null) 
+				throw new Exception("Common question id of question session is null");
+			
+			Optional<CommonQuestion> commonQuestionOp = 
+					commonQuestionDao.findById(commonQuestionId);
+			if (commonQuestionOp.isPresent()) return true;
+			
+			List<Question> questionListOfCommonQuestion =
+					questionDao
+					.findByCommonQuestionIdAndIsTemplateOfCommonQuestion(commonQuestionId, false);
+			if (questionListOfCommonQuestion == null 
+					|| questionListOfCommonQuestion.isEmpty()) 
+				throw new Exception("Question list of common question are null");
+			
+			List<Question> questionList = new ArrayList<>();
+			questionListOfCommonQuestion.forEach(item -> {
+				item.setQuestionCategory(DataConstant.Key.CUSTOMIZED_QUESTION_OF_CATEGORY);
+				item.setCommonQuestionId(null);
+				item.setIsTemplateOfCommonQuestion(null);
+				questionList.add(item);
+			});
+			questionDao.saveAll(questionList);
+			return false;
 		} catch (Exception e) {
 			throw new Exception(e);
 		}

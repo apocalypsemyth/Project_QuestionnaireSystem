@@ -2,6 +2,7 @@ package com.QuestionnaireProject.QuestionnaireSystem.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -21,6 +23,7 @@ import com.QuestionnaireProject.QuestionnaireSystem.entity.Questionnaire;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.User;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.UserAnswer;
 import com.QuestionnaireProject.QuestionnaireSystem.enums.RtnInfo;
+import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.DataTransactionalService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.ModelService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.QuestionService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.QuestionnaireService;
@@ -29,7 +32,7 @@ import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.UserService;
 import com.QuestionnaireProject.QuestionnaireSystem.util.StringUtil;
 
 @Controller
-@RequestMapping(UrlConstant.Key.ROOT)
+@RequestMapping(UrlConstant.Path.ROOT)
 public class FrontController {
 	
 private Logger logger = LoggerFactory.getLogger(getClass());
@@ -47,10 +50,37 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 	private UserAnswerService userAnswerService;
 	
 	@Autowired
+	private DataTransactionalService dataTransactionalService;
+	
+	@Autowired
 	private ModelService modelService;
 	
+	@GetMapping("/{anyPath}")
+	public String getFrontAnyPath(
+			@PathVariable String anyPath
+			) {
+		if (anyPath.equals(UrlConstant.Path.QUESTIONNAIRE_LIST)) {
+			return UrlConstant.Control.REDIRECT 
+					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
+		}
+		else if (anyPath.equals(UrlConstant.Path.ANSWERING_QUESTIONNAIRE_DETAIL)) {
+			return UrlConstant.Control.REDIRECT 
+					+ UrlConstant.Path.ANSWERING_QUESTIONNAIRE_DETAIL;
+		}
+		else if (anyPath.equals(UrlConstant.Path.CHECKING_QUESTIONNAIRE_DETAIL)) {
+			return UrlConstant.Control.REDIRECT 
+					+ UrlConstant.Path.CHECKING_QUESTIONNAIRE_DETAIL;
+		}
+		else if (anyPath.equals(UrlConstant.Path.QUESTIONNAIRE_STATISTICS)) {
+			return UrlConstant.Control.REDIRECT 
+					+ UrlConstant.Path.QUESTIONNAIRE_STATISTICS;
+		}
+		else
+			return UrlConstant.Path.NOT_FOUND;
+	}
+	
 	// front
-	@GetMapping(UrlConstant.Key.QUESTIONNAIRE_LIST)
+	@GetMapping(UrlConstant.Path.QUESTIONNAIRE_LIST)
 	public String getFrontQuestionnaireList(
 			Model model,
 			RedirectAttributes redirectAttributes
@@ -73,19 +103,25 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			logger.error(e.getMessage());
 			redirectAttributes.addFlashAttribute(ModelConstant.Key.ERROR_MESSAGE, ModelConstant.Value.FAILED);
 			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Key.QUESTIONNAIRE_LIST;
+					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
 		}
-		return UrlConstant.Key.FRONT;
+		return UrlConstant.Path.FRONT;
 	}
 	
-	@GetMapping(UrlConstant.Key.ANSWERING_QUESTIONNAIRE_DETAIL)
+	@GetMapping(UrlConstant.Path.ANSWERING_QUESTIONNAIRE_DETAIL)
 	public String getFrontAnsweringQuestionnaireDetail(
 			HttpSession session,
 			Model model, 
 			RedirectAttributes redirectAttributes,
-			@RequestParam(value = "ID", required = false) String questionnaireIdStr
+			@RequestParam(value = UrlConstant.QueryParam.ID, required = false) String questionnaireIdStr,
+			HttpServletRequest request
 			) throws Exception {
 		try {
+			boolean isValidQueryString = 
+					dataTransactionalService.isValidQueryString(request, null);
+			if (!isValidQueryString)
+				throw new Exception("Query string is invalid");
+			
 			model = modelService.setFragmentName(model, ModelConstant.Value.ANSWERING_QUESTIONNAIRE_DETAIL);
 			model = modelService.setIsQuestionnaireList(model, false);
 			
@@ -114,19 +150,25 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			logger.error(e.getMessage());
 			redirectAttributes.addFlashAttribute(ModelConstant.Key.ERROR_MESSAGE, ModelConstant.Value.FAILED);
 			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Key.QUESTIONNAIRE_LIST;
+					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
 		}
-		return UrlConstant.Key.FRONT;
+		return UrlConstant.Path.FRONT;
 	}
 	
-	@GetMapping(UrlConstant.Key.CHECKING_QUESTIONNAIRE_DETAIL)
+	@GetMapping(UrlConstant.Path.CHECKING_QUESTIONNAIRE_DETAIL)
 	public String getFrontCheckingQuestionnaireDetail(
 			HttpSession session,
 			Model model, 
 			RedirectAttributes redirectAttributes,
-			@RequestParam(value = "ID", required = false) String questionnaireIdStr
+			@RequestParam(value = UrlConstant.QueryParam.ID, required = false) String questionnaireIdStr,
+			HttpServletRequest request
 			) throws Exception {
 		try {
+			boolean isValidQueryString = 
+					dataTransactionalService.isValidQueryString(request, null);
+			if (!isValidQueryString)
+				throw new Exception("Query string is invalid");
+			
 			model = modelService.setFragmentName(model, ModelConstant.Value.CHECKING_QUESTIONNAIRE_DETAIL);
 			model = modelService.setIsQuestionnaireList(model, false);
 			
@@ -162,18 +204,24 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			logger.error(e.getMessage());
 			redirectAttributes.addFlashAttribute(ModelConstant.Key.ERROR_MESSAGE, ModelConstant.Value.FAILED);
 			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Key.QUESTIONNAIRE_LIST;
+					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
 		}
-		return UrlConstant.Key.FRONT;
+		return UrlConstant.Path.FRONT;
 	}
 	
-	@GetMapping(UrlConstant.Key.QUESTIONNAIRE_STATISTICS)
+	@GetMapping(UrlConstant.Path.QUESTIONNAIRE_STATISTICS)
 	public String getFrontQuestionnaireStatistics(
 			Model model, 
 			RedirectAttributes redirectAttributes,
-			@RequestParam(value = "ID", required = false) String questionnaireIdStr
+			@RequestParam(value = UrlConstant.QueryParam.ID, required = false) String questionnaireIdStr,
+			HttpServletRequest request
 			) throws Exception {
 		try {
+			boolean isValidQueryString = 
+					dataTransactionalService.isValidQueryString(request, null);
+			if (!isValidQueryString)
+				throw new Exception("Query string is invalid");
+			
 			model = modelService.setFragmentName(model, ModelConstant.Value.QUESTIONNAIRE_STATISTICS);
 			model = modelService.setIsQuestionnaireList(model, false);
 			
@@ -195,9 +243,9 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			logger.error(e.getMessage());
 			redirectAttributes.addFlashAttribute(ModelConstant.Key.ERROR_MESSAGE, ModelConstant.Value.FAILED);
 			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Key.QUESTIONNAIRE_LIST;
+					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
 		}
-		return UrlConstant.Key.FRONT;
+		return UrlConstant.Path.FRONT;
 	}
 	
 }
