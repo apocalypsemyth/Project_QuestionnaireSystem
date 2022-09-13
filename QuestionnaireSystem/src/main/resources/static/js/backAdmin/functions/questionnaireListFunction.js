@@ -59,7 +59,7 @@ function DeleteQuestionnaireList(arrCheckedQuestionnaireId, strQueryString) {
                 page_index } = objArrQuestionnaire;
             $(divQuestionnaireListContainer).empty();
             $(divUcPagerContainer).empty();
-			EnableControlByHasData(true, true, total_data, total_rows);
+			EnableControlByHasData(true, true, questionnaire_list, total_data, total_rows);
 
             if (status_code === RtnInfo.PARAMETER_REQUIRED.statusCode
                 || message === RtnInfo.PARAMETER_REQUIRED.message) {
