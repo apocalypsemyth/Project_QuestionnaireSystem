@@ -134,6 +134,24 @@ public class DataTransactionalController {
 				);
 	}
 	
+	//à◊óπîªù–ê•î€é˘óvèdç⁄ï≈ñ 
+	@GetMapping(value = "/getIsUpdateModeSession")
+	
+	public String getIsUpdateModeSession(HttpSession session) {
+		String isNull = "true";
+		try {
+			Boolean isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
+			if (isUpdateMode == null) return isNull;
+			
+			isNull = "false";
+			return isNull;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			isNull = RtnInfo.FAILED.getMessage();
+			return isNull;
+		}
+	}
+	
 	@PostMapping(value = "/getUserAnswerDetail", 
 			consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)

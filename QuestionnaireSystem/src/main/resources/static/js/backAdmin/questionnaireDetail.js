@@ -91,7 +91,10 @@ $(document).ready(function () {
             $(divUserListPagerContainer).hide();
         }
         
-        $.when(GetCategoryList(), GetTypingList())
+        //為了在按瀏覽器上下頁按鈕時，觸發以下Async方法
+        $(window).on("unload", function () {
+		});
+	    $.when(GetCategoryList(), GetTypingList())
         .then(function () {
 			return $.when(GetIsSetQuestionListOfCommonQuestion());
 		})
@@ -101,12 +104,17 @@ $(document).ready(function () {
 		.then(function () {
 			return $.when(ShowOrHideCommonQuestionOfCategory());
 		})
+		.then(function () {
+			return $.when(GetIsUpdateModeSession());
+		})
+		.then(function () {
+			return $.when(ShowBtnDeleteQuestionByHasData(strQuestionnaireId, true));
+		})
 		.fail(function () {
 			setTimeout(() => {
 				ReplaceUrl(Url.BACK_ADMIN.uri + Url.QUESTIONNAIRE_LIST.uri);
 			}, DELAY_TIME);
         });
-        ShowBtnDeleteQuestionByHasData(strQuestionnaireId, true);
 		
         $(ulQuestionnaireDetailTabs + " li a[data-bs-toggle='tab']").on("show.bs.tab", function () {
             sessionStorage.setItem(activeTab, $(this).attr("href"));

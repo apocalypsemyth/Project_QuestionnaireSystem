@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.QuestionnaireProject.QuestionnaireSystem.constant.ModelConstant;
+import com.QuestionnaireProject.QuestionnaireSystem.constant.SessionConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.constant.UrlConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.Question;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.Questionnaire;
@@ -29,7 +31,6 @@ import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.QuestionService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.QuestionnaireService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.UserAnswerService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.UserService;
-import com.QuestionnaireProject.QuestionnaireSystem.util.StringUtil;
 
 @Controller
 @RequestMapping(UrlConstant.Path.ROOT)
@@ -116,6 +117,12 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			@RequestParam(value = UrlConstant.QueryParam.ID, required = false) String questionnaireIdStr,
 			HttpServletRequest request
 			) throws Exception {
+		//à◊óπîªù–ê•î€é˘óvèdç⁄ï≈ñ 
+		Boolean isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
+		if (isUpdateMode == null) 
+			session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, StringUtils.hasText(questionnaireIdStr));
+		else 
+			session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, isUpdateMode);
 		try {
 			boolean isValidQueryString = 
 					dataTransactionalService.isValidQueryString(request, null);
@@ -131,9 +138,6 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 					questionService.getQuestionList(questionnaireIdStr, true);
 			User user = userService.getUser(session);
 			List<UserAnswer> userAnswerList = userAnswerService.getUserAnswerList(session);
-			if (!StringUtil.Func.isValidUUID(questionnaireIdStr)) {
-				throw new Exception(RtnInfo.FAILED.getMessage());
-			}
 			if (questionnaire != null 
 					&& !questionnaire.getQuestionnaireId().toString().equals(questionnaireIdStr)) {
 				throw new Exception(RtnInfo.FAILED.getMessage());
@@ -177,9 +181,6 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			List<Question> questionList = 
 					questionService.getQuestionList(questionnaireIdStr, true);
 			User user = userService.getUser(session);
-			if (!StringUtil.Func.isValidUUID(questionnaireIdStr)) {
-				throw new Exception(RtnInfo.FAILED.getMessage());
-			}
 			if (questionnaire != null 
 					&& !questionnaire.getQuestionnaireId().toString().equals(questionnaireIdStr)) {
 				throw new Exception(RtnInfo.FAILED.getMessage());
@@ -227,9 +228,6 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			
 			Questionnaire questionnaire = 
 					questionnaireService.getQuestionnaire(questionnaireIdStr);
-			if (!StringUtil.Func.isValidUUID(questionnaireIdStr)) {
-				throw new Exception(RtnInfo.FAILED.getMessage());
-			}
 			if (questionnaire != null 
 					&& !questionnaire.getQuestionnaireId().toString().equals(questionnaireIdStr)) {
 				throw new Exception(RtnInfo.FAILED.getMessage());

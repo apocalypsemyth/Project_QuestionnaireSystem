@@ -3,6 +3,19 @@ $(document).ready(function () {
         
     }
     else {
+		//為了在按瀏覽器上下頁按鈕時，觸發以下Async方法
+		$(window).on("unload", function () {
+		});
+		$.when(GetIsUpdateModeSession())
+		.then(function () {
+			return $.when(GetIsUpdateModeSession());
+		})
+		.fail(function () {
+			setTimeout(() => {
+	            ReplaceUrl(Url.QUESTIONNAIRE_LIST.uri);
+			}, DELAY_TIME);
+        });
+	
         $(aLinkCheckingQuestionnaireDetail).click(function () {
             ResetUserInputsItsIsInvalidClass();
             ResetUserInputsItsValidMessage();

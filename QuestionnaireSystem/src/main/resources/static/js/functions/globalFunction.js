@@ -1,4 +1,56 @@
 /**
+ * 刪除是否為更新模式Session。
+ */
+function DeleteIsUpdateModeSession() {
+	$.ajax({
+        url: `${JAVA_SERVICE_DOMAIN}/deleteIsUpdateModeSession`,
+        method: METHOD_GET,
+        success: function (strIsDeleted) {
+            if (strIsDeleted === "false") {
+                alert(RtnInfo.FAILED.message);
+			}
+        },
+        error: function (msg) {
+            console.log(msg);
+            alert(errorMessageOfAjax);
+        },
+    });
+}
+/**
+ * 取得是否為更新模式Session。
+ */
+function GetIsUpdateModeSession() {
+	let defer = $.Deferred();
+	
+	$.ajax({
+        url: `${JAVA_SERVICE_DOMAIN}/getIsUpdateModeSession`,
+        method: METHOD_GET,
+        success: function (strIsNull) {
+			if (strIsNull === RtnInfo.FAILED.message) {
+				alert(RtnInfo.FAILED.message);
+				defer.reject();
+			}
+            else if (strIsNull === "false") {
+                defer.resolve();
+			}
+			else if (strIsNull === "true") {
+				setTimeout(() => {
+					window.location.reload(true);
+				});
+				return;
+			}
+        },
+        error: function (msg) {
+            console.log(msg);
+            alert(errorMessageOfAjax);
+            defer.reject();
+        },
+    });
+    
+    return defer.promise();
+}
+
+/**
  * 取得問卷列表頁面的為了搜尋之輸入控制項資料。
  * @return Object 為了搜尋之輸入控制項資料。
  */

@@ -4,6 +4,7 @@ $(document).ready(function () {
     }
     else if (!IsTargetUrl(Url.BACK_ADMIN.uri) && IsTargetUrl(Url.QUESTIONNAIRE_LIST.uri)) {
 		$(window).on("beforeunload", function () {
+			DeleteIsUpdateModeSession();
 			DeleteSessionOfUserAndUserAnswerList();
 		});
 		

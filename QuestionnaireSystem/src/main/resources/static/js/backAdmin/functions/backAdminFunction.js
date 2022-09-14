@@ -9,23 +9,6 @@ function SetContainerSession(strSelector, strSessionName) {
     sessionStorage.setItem(strSessionName, strHtml);
 }
 
-// 問卷和常用問題列表頁面方法
-function DeleteIsUpdateModeSession() {
-	$.ajax({
-        url: `${JAVA_SERVICE_DOMAIN}/deleteIsUpdateModeSession`,
-        method: METHOD_GET,
-        success: function (strIsDeleted) {
-            if (strIsDeleted === "false") {
-                alert(RtnInfo.FAILED.message);
-			}
-        },
-        error: function (msg) {
-            console.log(msg);
-            alert(errorMessageOfAjax);
-        },
-    });
-}
-
 // 問卷和常用問題詳細頁面方法
 /**
  * 創建問題種類Html，藉由問題種類陣列。
@@ -143,12 +126,13 @@ function GetTypingList() {
  * 顯示刪除問卷或常用問題其問題按鈕，藉由檢查目標資料是否存在。
  * @param String 問卷或常用問題Id
  * @param Boolean 是否為問卷詳細頁面
- * @return String 錯誤或成功訊息
+ * @return Promise promise
  */
 function ShowBtnDeleteQuestionByHasData(strQuestionnaireOrCommonQuestionId, boolIsQuestionnaire) {
 	let objPostData = { [boolIsQuestionnaire 
 		? DataProperty.QUESTIONNAIRE_ID.key 
 		: DataProperty.COMMON_QUESTION_ID.key]: strQuestionnaireOrCommonQuestionId };
+	let defer = $.Deferred();
 	
     $.ajax({
         url: `${JAVA_SERVICE_DOMAIN}/showBtnDeleteQuestionByHasData`,
@@ -162,30 +146,37 @@ function ShowBtnDeleteQuestionByHasData(strQuestionnaireOrCommonQuestionId, bool
 			
             if (strRtnInfo === RtnInfo.FAILED.message) {
 				alert(RtnInfo.FAILED.message);
+				defer.reject();
             }
             else if (strRtnInfo === RtnInfo.NOT_FOUND.message) {
 				alert(RtnInfo.NOT_FOUND.message);
+				defer.reject();
             }
             else if (strRtnInfo === RtnInfo.NOT_EMPTY_EMPTY.message) {
-				
+				defer.resolve();
 			}
             else if (strRtnInfo === RtnInfo.SUCCESSFUL.message) {
-				
+				defer.resolve();
 			}
 			else if (strRtnInfo) {
 				alert(RtnInfo.FAILED.message);
+				defer.reject();
 			}
             else {
                 $(boolIsQuestionnaire 
 					? btnDeleteQuestion 
 					: btnDeleteQuestionOfCommonQuestion).show();
+				defer.resolve();
             }
         },
         error: function (msg) {
             console.log(msg);
             alert(errorMessageOfAjax);
+            defer.reject();
         },
     });
+    
+    return defer.promise();
 }
 /**
  * 創建問卷或常用問題其問題列表Html，藉由其問題陣列和是否為問卷詳細頁面。
@@ -306,15 +297,24 @@ function ResetQuestionInputs(strCategoryName = customizedQuestionOfCategory) {
  * @param String 種類名稱(自訂問題/常用問題)
  */
 function ResetQuestionOfCommonQuestionInputs(strCategoryName = commonQuestionOfCategory) {
-    $(selectCategoryList + " option").filter(function () {
-        return $(this).text() === strCategoryName;
-    }).prop("selected", true);
-    $(selectTypingList + " option").filter(function () {
-        return $(this).text() === SINGLE_SELECT;
-    }).prop("selected", true);
-    $(txtQuestionNameOfCommonQuestion).val("");
-    $(txtQuestionAnswerOfCommonQuestion).val("");
-    $(ckbQuestionRequiredOfCommonQuestion).prop("checked", false);
+    //為了常用問題詳細頁面的Async方法
+    let defer = $.Deferred();
+    try {
+	    $(selectCategoryList + " option").filter(function () {
+	        return $(this).text() === strCategoryName;
+	    }).prop("selected", true);
+	    $(selectTypingList + " option").filter(function () {
+	        return $(this).text() === SINGLE_SELECT;
+	    }).prop("selected", true);
+	    $(txtQuestionNameOfCommonQuestion).val("");
+	    $(txtQuestionAnswerOfCommonQuestion).val("");
+	    $(ckbQuestionRequiredOfCommonQuestion).prop("checked", false);
+	    defer.resolve();
+	} catch (e) {
+		console.log(`Reset question of common question inputs error: ${e}`)
+		defer.reject();
+	}
+	return defer.promise();
 }
 /**
  * 創建問卷或常用問題其問題，藉由其問題輸入控制項資料和是否為問卷詳細頁面。

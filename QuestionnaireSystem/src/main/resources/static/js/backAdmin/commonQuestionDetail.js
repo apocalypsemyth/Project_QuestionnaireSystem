@@ -3,17 +3,25 @@ $(document).ready(function () {
         
     }
     else {
+		//為了在按瀏覽器上下頁按鈕時，觸發以下Async方法
+		$(window).on("unload", function () {
+		});
         let strCommonQuestionId = GetQueryParamOfQueryString("ID");
 		$.when(GetCategoryList(true), GetTypingList())
 		.then(function () {
-			ResetQuestionOfCommonQuestionInputs();
+			return $.when(ResetQuestionOfCommonQuestionInputs());
+		})
+		.then(function () {
+			return $.when(GetIsUpdateModeSession());
+		})
+		.then(function () {
+			return $.when(ShowBtnDeleteQuestionByHasData(strCommonQuestionId, false));
 		})
 		.fail(function () {
 			setTimeout(() => {
 	            ReplaceUrl(Url.BACK_ADMIN.uri + Url.COMMON_QUESTION_LIST.uri);
 			}, DELAY_TIME);
         });
-		ShowBtnDeleteQuestionByHasData(strCommonQuestionId, false);
 		
         $(btnAddQuestionOfCommonQuestion).click(function (e) {
             e.preventDefault();
