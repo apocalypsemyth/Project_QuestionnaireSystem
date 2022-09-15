@@ -502,20 +502,30 @@ function CreateUserList(objArrUser, intTotalRows, intPagerIndex) {
  * @param Number 頁數
  */
 function CreateUserListPager(intPageIndex) {
+	$(divUserListPagerContainer).attr("class", "d-flex align-items-center");
     $(divUserListPagerContainer).append(
         `
             <a th:onclick="javascript:void(0)"
             	 id="aLinkUserListPager-First" 
-            	class="text-decoration-none" 
-            	href="#Index=First">
-                首頁
+            	href="#Index=First"
+            	class="d-block mx-1 external-link"
+        	>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16">
+				  <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+				  <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+				</svg>
             </a>
+            <a class="d-block mx-2 fs-5">|</a>
             <a th:onclick="javascript:void(0)"
             	id="aLinkUserListPager-Prev" 
-            	class="text-decoration-none" 
-            	href="#Index=Prev">
-                上一頁
+            	href="#Index=Prev"
+            	class="d-block mx-1 external-link"
+        	>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+				  <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+				</svg>
             </a>
+            <a class="d-block mx-2 fs-5">|</a>
         `
     );
 
@@ -524,10 +534,12 @@ function CreateUserListPager(intPageIndex) {
             `
                 <a th:onclick="javascript:void(0)"
                 	id="aLinkUserListPager-${i}" 
-                	class="text-decoration-none" 
-                	href="#Index=${i}">
+                	class="d-block mx-2 external-link" 
+                	href="#Index=${i}"
+            	>
                     ${i}
                 </a>
+                <a class="d-block mx-2 fs-5">|</a>
             `
         );
     }
@@ -537,15 +549,23 @@ function CreateUserListPager(intPageIndex) {
         `
             <a th:onclick="javascript:void(0)"
             	id="aLinkUserListPager-Next" 
-            	class="text-decoration-none" 
-            	href="#Index=Next">
-                下一頁
+            	href="#Index=Next"
+            	class="d-block mx-1 external-link"
+        	>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+				  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+				</svg>
             </a>
+            <a class="d-block mx-2 fs-5">|</a>
             <a th:onclick="javascript:void(0)"
             	id="aLinkUserListPager-Last" 
-            	class="text-decoration-none" 
-            	href="#Index=Last">
-                末頁
+            	href="#Index=Last"
+            	class="d-block mx-1 external-link"
+        	>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16">
+				  <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/>
+				  <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/>
+				</svg>
             </a>
         `
     );

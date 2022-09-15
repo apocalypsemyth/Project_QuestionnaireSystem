@@ -1,0 +1,14 @@
+.external-link {
+  position: relative;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a.external-link:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 1px solid #0d6efd;
+}
