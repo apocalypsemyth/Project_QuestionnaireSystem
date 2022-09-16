@@ -3,18 +3,16 @@
 <head>
 	<meta charset="UTF-8" />
     <title>未找到 - 錯誤頁面</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}" />
-    <script th:src="@{/js/bootstrap/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/notFound.css}" />
 </head>
 <body>
-    <div id="notFoundContainer" class="row align-items-center justify-content-center g-0 gy-3 p-3">
-        <div class="col-md-11">
-        	<div class="row align-items-center justify-content-center">
-        		<div class="col-4 offset-xs-4">
-		            <h1>未找到 - 錯誤頁面</h1>
-        		</div>
-        	</div>
-        </div>
-    </div>
+    <div class="noise"></div>
+	<div class="overlay"></div>
+	<div class="terminal">
+	  <h1>未找到 - 錯誤頁面 <span class="errorcode">404</span></h1>
+	  <p class="output">您要查找的頁面可能已被刪除、更改名稱或暫時不可用。</p>
+	  <p class="output">請嘗試<a id="aLinkBackPrevOnNotFound" onclick="history.go(-1)" style="cursor: pointer;">回上一頁</a>或<a id="aLinkBackHomeOnNotFound" href="/questionnaireList">返回主頁</a>。</p>
+	  <p class="output">祝你好運。</p>
+	</div>
 </body>
 </html>
