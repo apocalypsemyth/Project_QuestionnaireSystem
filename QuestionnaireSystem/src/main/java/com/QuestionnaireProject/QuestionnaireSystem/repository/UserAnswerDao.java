@@ -14,5 +14,5 @@ public interface UserAnswerDao extends JpaRepository<UserAnswer, UUID> {
 	public List<UserAnswer> findByQuestionnaireIdAndUserId(UUID questionnaireId, UUID userId); 
 	
 	public List<UserAnswer> findByQuestionnaireId(UUID questionnaireId);
-	
+
 }

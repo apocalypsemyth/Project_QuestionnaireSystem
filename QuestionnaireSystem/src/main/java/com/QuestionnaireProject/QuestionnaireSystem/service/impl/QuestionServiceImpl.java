@@ -62,4 +62,21 @@ public class QuestionServiceImpl implements QuestionService {
 		}
 	}
 
+	@Override
+	public boolean hasCommonQuestionThatSetByQuestionnaire(
+			UUID commonQuestionId
+			) throws Exception {
+		try {
+			List<Question> questionListOfCommonQuestion =
+					questionDao
+					.findByCommonQuestionIdAndIsTemplateOfCommonQuestion(commonQuestionId, false);
+			if (questionListOfCommonQuestion == null 
+					|| questionListOfCommonQuestion.isEmpty()) return false;
+			
+			return true;
+		} catch (Exception e) {
+			throw new Exception(e);
+		}
+	}
+
 }

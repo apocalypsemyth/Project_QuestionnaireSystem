@@ -10,7 +10,10 @@
 </head>
 <body>
 	<button th:fragment="ucSubmitButton" 
-		th:disabled="${isOverDateOrHasUser != null and isOverDateOrHasUser}" 
+		th:disabled="${isOverDateOrHasUser != null 
+			and isOverDateOrHasUser 
+			or hasCommonQuestionThatSetByQuestionnaire != null 
+			and hasCommonQuestionThatSetByQuestionnaire}" 
 		class="btnUcSubmit btn btn-primary">
 		送出
 	</button>

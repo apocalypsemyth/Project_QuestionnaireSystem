@@ -10,31 +10,31 @@ import com.QuestionnaireProject.QuestionnaireSystem.vo.PostUserAnswerReq;
 public interface UserAnswerService {
 	
 	/**
-	 * æ“¾g—pÒ‰ñ“š—ñ•\‰—SessionB
+	 * å–å¾—ä½¿ç”¨è€…å›ç­”åˆ—è¡¨æ–¼Sessionã€‚
 	 * @param HttpSession session
-	 * @return List g—pÒ‰ñ“š—ñ•\‰—Session
-	 * @throws æ“¾g—pÒ‰ñ“š—ñ•\‰—SessionCá¢¶öŒëB
+	 * @return List ä½¿ç”¨è€…å›ç­”åˆ—è¡¨æ–¼Session
+	 * @throws å–å¾—ä½¿ç”¨è€…å›ç­”åˆ—è¡¨æ–¼Sessionæ™‚ï¼Œç™¼ç”ŸéŒ¯èª¤ã€‚
 	 */
 	public List<UserAnswer> getUserAnswerList(
 			HttpSession session
 			) throws Exception;
 	
 	/**
-	 * æ“¾g—pÒ‰ñ“š—ñ•\CåS—R–â™ÉIdB
-	 * @param String –â™ÉId
-	 * @return List g—pÒ‰ñ“š—ñ•\CåS—R–â™ÉId
-	 * @throws æ“¾g—pÒ‰ñ“š—ñ•\CåS—R–â™ÉIdCá¢¶öŒëB
+	 * å–å¾—ä½¿ç”¨è€…å›ç­”åˆ—è¡¨ï¼Œè—‰ç”±å•å·Idã€‚
+	 * @param String å•å·Id
+	 * @return List ä½¿ç”¨è€…å›ç­”åˆ—è¡¨ï¼Œè—‰ç”±å•å·Id
+	 * @throws å–å¾—ä½¿ç”¨è€…å›ç­”åˆ—è¡¨ï¼Œè—‰ç”±å•å·Idæ™‚ï¼Œç™¼ç”ŸéŒ¯èª¤ã€‚
 	 */
 	public List<UserAnswer> getUserAnswerList(
 			String questionnaireIdStr
 			) throws Exception;
 	
 	/**
-	 * æ“¾g—pÒ‰ñ“š—ñ•\CåS—Rg—pÒId˜ag—pÒ‰ñ“š—ñ•\B
-	 * @param String g—pÒId
-	 * @param List g—pÒ‰ñ“š—ñ•\
-	 * @return List g—pÒ‰ñ“š—ñ•\CåS—Rg—pÒId˜ag—pÒ‰ñ“š—ñ•\
-	 * @throws æ“¾g—pÒ‰ñ“š—ñ•\CåS—Rg—pÒId˜ag—pÒ‰ñ“š—ñ•\Cá¢¶öŒëB
+	 * å–å¾—ä½¿ç”¨è€…å›ç­”åˆ—è¡¨ï¼Œè—‰ç”±ä½¿ç”¨è€…Idå’Œä½¿ç”¨è€…å›ç­”åˆ—è¡¨ã€‚
+	 * @param String ä½¿ç”¨è€…Id
+	 * @param List ä½¿ç”¨è€…å›ç­”åˆ—è¡¨
+	 * @return List ä½¿ç”¨è€…å›ç­”åˆ—è¡¨ï¼Œè—‰ç”±ä½¿ç”¨è€…Idå’Œä½¿ç”¨è€…å›ç­”åˆ—è¡¨
+	 * @throws å–å¾—ä½¿ç”¨è€…å›ç­”åˆ—è¡¨ï¼Œè—‰ç”±ä½¿ç”¨è€…Idå’Œä½¿ç”¨è€…å›ç­”åˆ—è¡¨æ™‚ï¼Œç™¼ç”ŸéŒ¯èª¤ã€‚
 	 */
 	public List<UserAnswer> getUserAnswerList(
 			String userIdStr,
@@ -42,10 +42,10 @@ public interface UserAnswerService {
 			) throws Exception;
 	
 	/**
-	 * İ’ug—pÒ‰ñ“š—ñ•\‰—SessionB
+	 * è¨­ç½®ä½¿ç”¨è€…å›ç­”åˆ—è¡¨æ–¼Sessionã€‚
 	 * @param HttpSession session
-	 * @param List g—pÒ‰ñ“š—ñ•\
-	 * @throws İ’ug—pÒ‰ñ“š—ñ•\‰—SessionCá¢¶öŒëB
+	 * @param List ä½¿ç”¨è€…å›ç­”åˆ—è¡¨
+	 * @throws è¨­ç½®ä½¿ç”¨è€…å›ç­”åˆ—è¡¨æ–¼Sessionæ™‚ï¼Œç™¼ç”ŸéŒ¯èª¤ã€‚
 	 */
 	public void setUserAnswerList(
 			HttpSession session,
@@ -53,10 +53,10 @@ public interface UserAnswerService {
 			) throws Exception;
 	
 	/**
-	 * ‘nŒšg—pÒ‰ñ“š—ñ•\‰—SessionCåS—Rg—pÒ‰ñ“š¿‹BodyB
+	 * å‰µå»ºä½¿ç”¨è€…å›ç­”åˆ—è¡¨æ–¼Sessionï¼Œè—‰ç”±ä½¿ç”¨è€…å›ç­”è«‹æ±‚Bodyã€‚
 	 * @param HttpSession session
-	 * @param Object g—pÒ‰ñ“š¿‹Body
-	 * @throws ‘nŒšg—pÒ‰ñ“š—ñ•\‰—SessionCá¢¶öŒëB
+	 * @param Object ä½¿ç”¨è€…å›ç­”è«‹æ±‚Body
+	 * @throws å‰µå»ºä½¿ç”¨è€…å›ç­”åˆ—è¡¨æ–¼Sessionæ™‚ï¼Œç™¼ç”ŸéŒ¯èª¤ã€‚
 	 */
 	public void createUserAnswerList(
 			HttpSession session, 
@@ -64,9 +64,9 @@ public interface UserAnswerService {
 			) throws Exception;
 	
 	/**
-	 * ™ˆœ‘S•”g—pÒ‰ñ“š—ñ•\‰—SessionB
+	 * åˆªé™¤å…¨éƒ¨ä½¿ç”¨è€…å›ç­”åˆ—è¡¨æ–¼Sessionã€‚
 	 * @param HttpSession session
-	 * @throws ™ˆœ‘S•”g—pÒ‰ñ“š—ñ•\‰—SessionCá¢¶öŒëB
+	 * @throws åˆªé™¤å…¨éƒ¨ä½¿ç”¨è€…å›ç­”åˆ—è¡¨æ–¼Sessionæ™‚ï¼Œç™¼ç”ŸéŒ¯èª¤ã€‚
 	 */
 	public void deleteUserAnswerList(
 			HttpSession session

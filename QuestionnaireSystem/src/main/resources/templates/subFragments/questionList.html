@@ -32,7 +32,10 @@
 			<tr th:if="${!question.getIsDeleted()}">
 				<td>
 					<input th:id="${question.getQuestionId()}" 
-						th:disabled="${isOverDateOrHasUser != null and isOverDateOrHasUser}" 
+						th:disabled="${isOverDateOrHasUser != null 
+							and isOverDateOrHasUser 
+							or hasCommonQuestionThatSetByQuestionnaire != null 
+							and hasCommonQuestionThatSetByQuestionnaire}" 
 						type="checkbox" />
 				</td>
 				<td>
@@ -45,7 +48,9 @@
 					[[${question.getQuestionTyping()}]]
 				</td>
 				<td>
-					<input type="checkbox" style="pointer-events: none;" th:checked="${question.getQuestionRequired()}" />
+					<input th:checked="${question.getQuestionRequired()}" 
+						type="checkbox" 
+						style="pointer-events: none;" />
 				</td>
 				<td>
 					<th:block th:if="${dataListModel.isQuestionnaire}">
@@ -62,6 +67,7 @@
 						<a th:onclick="javascript:void(0)"
 							th:id="'aLinkUpdateQuestionOfCommonQuestion-' + ${question.getQuestionId()}"
 							th:href="'#QuestionIDOfCommonQuestion=' + ${question.getQuestionId()}"
+							th:style="${hasCommonQuestionThatSetByQuestionnaire != null and hasCommonQuestionThatSetByQuestionnaire ? 'pointer-events: none;' : ''}"
 						>
 							編輯
 						</a>

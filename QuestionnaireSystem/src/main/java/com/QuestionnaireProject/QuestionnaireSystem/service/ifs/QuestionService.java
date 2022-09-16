@@ -1,6 +1,7 @@
 package com.QuestionnaireProject.QuestionnaireSystem.service.ifs;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.QuestionnaireProject.QuestionnaireSystem.entity.Question;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.UserAnswer;
@@ -8,11 +9,11 @@ import com.QuestionnaireProject.QuestionnaireSystem.entity.UserAnswer;
 public interface QuestionService {
 	
 	/**
-	 * æ“¾—i—L–Ú•W–â™Éˆ½í—p–â‘èId˜a¥”Ûˆ×–â™É“I–â‘è—ñ•\B
-	 * @param String –â™Éˆ½í—p–â‘èId
-	 * @param boolean ¥”Ûˆ×–â™É
-	 * @return List –â‘è—ñ•\
-	 * @throws æ“¾—i—L–Ú•W–â™Éˆ½í—p–â‘èId˜a¥”Ûˆ×–â™É“I–â‘è—ñ•\Cá¢¶öŒëB
+	 * å–å¾—æ“æœ‰ç›®æ¨™å•å·æˆ–å¸¸ç”¨å•é¡ŒIdå’Œæ˜¯å¦ç‚ºå•å·çš„å•é¡Œåˆ—è¡¨ã€‚
+	 * @param String å•å·æˆ–å¸¸ç”¨å•é¡ŒId
+	 * @param boolean æ˜¯å¦ç‚ºå•å·
+	 * @return List å•é¡Œåˆ—è¡¨
+	 * @throws å–å¾—æ“æœ‰ç›®æ¨™å•å·æˆ–å¸¸ç”¨å•é¡ŒIdå’Œæ˜¯å¦ç‚ºå•å·çš„å•é¡Œåˆ—è¡¨æ™‚ï¼Œç™¼ç”ŸéŒ¯èª¤ã€‚
 	 */
 	public List<Question> getQuestionList(
 			String questionnaireOrCommonQuestionIdStr,
@@ -20,15 +21,25 @@ public interface QuestionService {
 			) throws Exception;
 	
 	/**
-	 * æ“¾—i—L–Ú•Wg—pÒ‰ñ“š“I–â‘è—ñ•\B
-	 * @param List –â‘è—ñ•\
-	 * @param List g—pÒ‰ñ“š—ñ•\
-	 * @return List —i—L–Ú•Wg—pÒ‰ñ“š“I–â‘è—ñ•\
-	 * @throws æ“¾—i—L–Ú•Wg—pÒ‰ñ“š“I–â‘è—ñ•\Cá¢¶öŒëB
+	 * å–å¾—æ“æœ‰ç›®æ¨™ä½¿ç”¨è€…å›ç­”çš„å•é¡Œåˆ—è¡¨ã€‚
+	 * @param List å•é¡Œåˆ—è¡¨
+	 * @param List ä½¿ç”¨è€…å›ç­”åˆ—è¡¨
+	 * @return List æ“æœ‰ç›®æ¨™ä½¿ç”¨è€…å›ç­”çš„å•é¡Œåˆ—è¡¨
+	 * @throws å–å¾—æ“æœ‰ç›®æ¨™ä½¿ç”¨è€…å›ç­”çš„å•é¡Œåˆ—è¡¨æ™‚ï¼Œç™¼ç”ŸéŒ¯èª¤ã€‚
 	 */
 	public List<Question> getListOfQuestionFromUserAnswer(
 			List<Question> questionList,
 			List<UserAnswer> userAnswerList
+			) throws Exception;
+	
+	/**
+	 * æª¢æŸ¥å¸¸ç”¨å•é¡Œæ˜¯å¦æœ‰è¢«å•å·å¥—ç”¨ï¼Œè—‰ç”±å¸¸ç”¨å•é¡ŒIdã€‚
+	 * @param UUID å¸¸ç”¨å•é¡ŒId
+	 * @return boolean å¸¸ç”¨å•é¡Œæ˜¯å¦æœ‰è¢«å•å·å¥—ç”¨
+	 * @throws æª¢æŸ¥å¸¸ç”¨å•é¡Œæ˜¯å¦æœ‰è¢«å•å·å¥—ç”¨æ™‚ï¼Œç™¼ç”ŸéŒ¯èª¤ã€‚
+	 */
+	public boolean hasCommonQuestionThatSetByQuestionnaire(
+			UUID commonQuestionId
 			) throws Exception;
 	
 }

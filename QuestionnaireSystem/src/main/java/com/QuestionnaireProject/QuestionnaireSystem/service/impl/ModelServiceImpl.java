@@ -267,6 +267,18 @@ public class ModelServiceImpl implements ModelService {
 	}
 	
 	@Override
+	public Model setHasCommonQuestionThatSetByQuestionnaire(
+			Model model, 
+			boolean hasCommonQuestionThatSetByQuestionnaire
+			) throws Exception {
+		try {
+			return model.addAttribute(ModelConstant.Key.HAS_COMMON_QUESTION_THAT_SET_BY_QUESTIONNAIRE, hasCommonQuestionThatSetByQuestionnaire);
+		} catch (Exception e) {
+			throw new Exception(e);
+		}
+	}
+	
+	@Override
 	public Model setErrorMessage(
 			Model model,
 			String errorMessage

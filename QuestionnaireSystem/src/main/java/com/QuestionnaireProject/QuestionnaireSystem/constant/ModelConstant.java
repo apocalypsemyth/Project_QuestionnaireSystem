@@ -26,6 +26,8 @@ public class ModelConstant {
 		public static final String USER_ANSWER_LIST_MODEL = "userAnswerListModel";
 
 		public static final String IS_OVER_DATE_OR_HAS_USER = "isOverDateOrHasUser";
+
+		public static final String HAS_COMMON_QUESTION_THAT_SET_BY_QUESTIONNAIRE = "hasCommonQuestionThatSetByQuestionnaire";
 		
 		public static final String ERROR_MESSAGE = "errorMessage";
 

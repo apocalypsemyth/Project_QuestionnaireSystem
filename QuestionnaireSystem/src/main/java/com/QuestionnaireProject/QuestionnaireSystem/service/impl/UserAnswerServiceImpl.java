@@ -159,5 +159,5 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 			throw new Exception(e);
 		}
 	}
-	
+
 }

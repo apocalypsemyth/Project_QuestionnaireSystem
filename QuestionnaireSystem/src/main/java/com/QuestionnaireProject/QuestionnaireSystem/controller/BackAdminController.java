@@ -1,6 +1,7 @@
 package com.QuestionnaireProject.QuestionnaireSystem.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -405,6 +406,13 @@ public class BackAdminController {
 					if (commonQuestionSession == null || questionSessionList == null) {
 						throw new Exception(RtnInfo.FAILED.getMessage());
 					}
+				}
+				if (commonQuestionSession != null) {
+					UUID commonQuestionId = commonQuestionSession.getCommonQuestionId();
+					boolean hasCommonQuestionThatSetByQuestionnaire =
+							questionService
+							.hasCommonQuestionThatSetByQuestionnaire(commonQuestionId);
+					model = modelService.setHasCommonQuestionThatSetByQuestionnaire(model, hasCommonQuestionThatSetByQuestionnaire);
 				}
 			}
 			

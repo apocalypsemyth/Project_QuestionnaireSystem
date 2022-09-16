@@ -161,6 +161,18 @@ public interface ModelService {
 			) throws Exception;
 	
 	/**
+	 * 設置啟用後台常用問題詳細頁面的控制項與否，藉由常用問題是否有被問卷套用。
+	 * @param Model model
+	 * @param boolean 常用問題是否有被問卷套用
+	 * @return Model model
+	 * @throws 設置啟用後台常用問題詳細頁面的控制項與否時，發生錯誤。
+	 */
+	public Model setHasCommonQuestionThatSetByQuestionnaire(
+			Model model, 
+			boolean hasCommonQuestionThatSetByQuestionnaire
+			) throws Exception;
+	
+	/**
 	 * 設置錯誤資訊，以顯示於警告視窗上。
 	 * @param Model model
 	 * @param String 錯誤資訊
