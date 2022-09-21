@@ -65,6 +65,8 @@ public class UserServiceImpl implements UserService {
 			List<User> userList = 
 					(List<User>) session.getAttribute(SessionConstant.Name.USER_LIST);
 			if (userList == null || userList.isEmpty()) return null;
+			
+			userList.sort(Comparator.comparing(User::getAnswerDate).reversed());
 			return userList;
 		} catch (Exception e) {
 			throw new Exception(e);

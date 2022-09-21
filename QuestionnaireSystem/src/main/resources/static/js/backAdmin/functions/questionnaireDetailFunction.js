@@ -502,7 +502,6 @@ function CreateUserList(objArrUser, intTotalRows, intPagerIndex) {
  * @param Number 頁數
  */
 function CreateUserListPager(intPageIndex) {
-	$(divUserListPagerContainer).attr("class", "d-flex align-items-center");
     $(divUserListPagerContainer).append(
         `
             <a th:onclick="javascript:void(0)"
