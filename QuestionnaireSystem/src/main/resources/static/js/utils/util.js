@@ -29,7 +29,7 @@ const HasText = function (str) {
  * @return String 格式為yyyy/MM/dd字串
  */
 const FormatDate = function (strDate) {
-    if (strDate == null) return;
+    if (!HasText(strDate)) return;
 
     let d = new Date(strDate);
     let month = d.getMonth() < 9 ? `0${d.getMonth() + 1}` : d.getMonth() + 1;
@@ -37,6 +37,24 @@ const FormatDate = function (strDate) {
     let result = d.getFullYear() + "/" + month + "/" + date;
 
     return result;
+}
+/**
+ * 格式目標字串為yyyy/MM/dd hh:mm:ss，藉由目標字串。
+ * @param String 目標字串
+ * @return String 格式為yyyy/MM/dd hh:mm:ss字串
+ */
+const FormatDateTime = function (strDate) {
+	if (!HasText(strDate)) return;
+	
+	let d = new Date(strDate);
+	let second = d.getSeconds();
+	let minute = d.getMinutes();
+	let hour = d.getHours();
+	let resultTime = hour + ":" + minute + ":" + second;
+	let resultDate = FormatDate(strDate);
+	let result = resultDate + " " + resultTime;
+	
+	return result;
 }
 /**
  * 檢查目標字串是否為合法的日期，藉由目標字串。

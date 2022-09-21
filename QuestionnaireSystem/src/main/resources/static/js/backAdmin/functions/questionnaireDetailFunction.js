@@ -742,7 +742,7 @@ function CreateUserDetail(objUser) {
 
                         <div class="col-12">
                             <div class="d-flex align-items-center justify-content-end">
-                                填寫時間: ${FormatDate(answerDate)}
+                                填寫時間: ${FormatDateTime(answerDate)}
                             </div>
                         </div>
                     </div>
@@ -787,7 +787,7 @@ function CreateUserAnswerDetail(objArrQuestion, objArrUserAnswer) {
         $("#divUserAnswerDetailInnerContainer").append(
             `
                 <div id="${questionId}" class="col-12">
-                    <div class="d-flex flex-column">
+                    <div class="d-flex flex-column gap-3">
                         <h3>
                             ${i}. ${questionName} ${questionRequired ? "(必填)" : ""}
                         </h3>
@@ -886,7 +886,7 @@ function GetUserAnswerDetail(strQuestionnaireId, strUserId) {
             $(divUserListContainer).hide();
             $(divUserListPagerContainer).empty();
             $(divUserListPagerContainer).hide();
-			
+
 			if (status_code === RtnInfo.FAILED.statusCode
                 || message === RtnInfo.FAILED.message) {
                 alert(RtnInfo.FAILED.message);
