@@ -1,6 +1,7 @@
 package com.QuestionnaireProject.QuestionnaireSystem.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,24 @@ public class TypingServiceImpl implements TypingService {
 	private TypingDao typingDao;
 	
 	@Override
-	public boolean hasTyping(String typingName) throws Exception {
+	public boolean hasTyping(
+			String typingName,
+			List<Typing> typingList
+			) throws Exception {
 		try {
-			Typing typing = typingDao.findByTypingName(typingName);
-			if (typing == null) return false;
-			return true;
+			List<Typing> filteredTypingList = 
+					typingList
+					.stream()
+					.filter(item -> item.getTypingName().equals(typingName))
+					.collect(Collectors.toList());
+			if (filteredTypingList == null || filteredTypingList.isEmpty()) 
+				return false;
+			else if (filteredTypingList.size() > 1) 
+				throw new Exception("There should be only one target typing");
+			else if (filteredTypingList.size() == 1) 
+				return true;
+			else 
+				return false;
 		} catch (Exception e) {
 			throw new Exception(e);
 		}

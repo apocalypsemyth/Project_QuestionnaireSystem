@@ -9,10 +9,14 @@ public interface TypingService {
 	/**
 	 * 檢查資料庫是否擁有目標類別名稱的問題類別。
 	 * @param String 類別名稱
+	 * @param List 類別列表
 	 * @return boolean 是否擁有目標類別名稱的問題類別
 	 * @throws 檢查資料庫是否擁有目標類別名稱的問題類別時，發生錯誤。
 	 */
-	public boolean hasTyping(String typingName) throws Exception;
+	public boolean hasTyping(
+			String typingName, 
+			List<Typing> typingList
+			) throws Exception;
 	
 	/**
 	 * 取得問題類別列表。

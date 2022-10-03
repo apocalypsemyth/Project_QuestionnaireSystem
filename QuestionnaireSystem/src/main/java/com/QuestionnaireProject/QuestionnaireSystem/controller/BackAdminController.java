@@ -178,10 +178,10 @@ public class BackAdminController {
 				categoryService.createCategory(DataConstant.Key.CUSTOMIZED_QUESTION_OF_CATEGORY);
 			}
 			else {
-				if (!categoryService.hasCategory(DataConstant.Key.COMMON_QUESTION_OF_CATEGORY)) {
+				if (!categoryService.hasCategory(DataConstant.Key.COMMON_QUESTION_OF_CATEGORY, categoryList)) {
 					categoryService.createCategory(DataConstant.Key.COMMON_QUESTION_OF_CATEGORY);
 				}
-				if (!categoryService.hasCategory(DataConstant.Key.CUSTOMIZED_QUESTION_OF_CATEGORY)) {
+				if (!categoryService.hasCategory(DataConstant.Key.CUSTOMIZED_QUESTION_OF_CATEGORY, categoryList)) {
 					categoryService.createCategory(DataConstant.Key.CUSTOMIZED_QUESTION_OF_CATEGORY);
 				}
 			}
@@ -192,13 +192,13 @@ public class BackAdminController {
 				typingService.createTyping(DataConstant.Key.TEXT);
 			}
 			else {
-				if (!typingService.hasTyping(DataConstant.Key.MULTIPLE_SELECT)) {
+				if (!typingService.hasTyping(DataConstant.Key.MULTIPLE_SELECT, typingList)) {
 					typingService.createTyping(DataConstant.Key.MULTIPLE_SELECT);
 				}
-				if (!typingService.hasTyping(DataConstant.Key.SINGLE_SELECT)) {
+				if (!typingService.hasTyping(DataConstant.Key.SINGLE_SELECT, typingList)) {
 					typingService.createTyping(DataConstant.Key.SINGLE_SELECT);
 				}
-				if (!typingService.hasTyping(DataConstant.Key.TEXT)) {
+				if (!typingService.hasTyping(DataConstant.Key.TEXT, typingList)) {
 					typingService.createTyping(DataConstant.Key.TEXT);
 				}
 			}
@@ -322,10 +322,10 @@ public class BackAdminController {
 				categoryService.createCategory(DataConstant.Key.CUSTOMIZED_QUESTION_OF_CATEGORY);
 			}
 			else {
-				if (!categoryService.hasCategory(DataConstant.Key.COMMON_QUESTION_OF_CATEGORY)) {
+				if (!categoryService.hasCategory(DataConstant.Key.COMMON_QUESTION_OF_CATEGORY, categoryList)) {
 					categoryService.createCategory(DataConstant.Key.COMMON_QUESTION_OF_CATEGORY);
 				}
-				if (!categoryService.hasCategory(DataConstant.Key.CUSTOMIZED_QUESTION_OF_CATEGORY)) {
+				if (!categoryService.hasCategory(DataConstant.Key.CUSTOMIZED_QUESTION_OF_CATEGORY, categoryList)) {
 					categoryService.createCategory(DataConstant.Key.CUSTOMIZED_QUESTION_OF_CATEGORY);
 				}
 			}
@@ -336,13 +336,13 @@ public class BackAdminController {
 				typingService.createTyping(DataConstant.Key.TEXT);
 			}
 			else {
-				if (!typingService.hasTyping(DataConstant.Key.MULTIPLE_SELECT)) {
+				if (!typingService.hasTyping(DataConstant.Key.MULTIPLE_SELECT, typingList)) {
 					typingService.createTyping(DataConstant.Key.MULTIPLE_SELECT);
 				}
-				if (!typingService.hasTyping(DataConstant.Key.SINGLE_SELECT)) {
+				if (!typingService.hasTyping(DataConstant.Key.SINGLE_SELECT, typingList)) {
 					typingService.createTyping(DataConstant.Key.SINGLE_SELECT);
 				}
-				if (!typingService.hasTyping(DataConstant.Key.TEXT)) {
+				if (!typingService.hasTyping(DataConstant.Key.TEXT, typingList)) {
 					typingService.createTyping(DataConstant.Key.TEXT);
 				}
 			}

@@ -1,6 +1,7 @@
 package com.QuestionnaireProject.QuestionnaireSystem.service.impl;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.List;
 
@@ -18,11 +19,24 @@ public class CategoryServiceImpl implements CategoryService {
 	private CategoryDao categoryDao;
 	
 	@Override
-	public boolean hasCategory(String categoryName) throws Exception {
+	public boolean hasCategory(
+			String categoryName,
+			List<Category> categoryList
+			) throws Exception {
 		try {
-			Category category = categoryDao.findByCategoryName(categoryName);
-			if (category == null) return false;
-			return true;
+			List<Category> filteredCategoryList = 
+					categoryList
+					.stream()
+					.filter(item -> item.getCategoryName().equals(categoryName))
+					.collect(Collectors.toList());
+			if (filteredCategoryList == null || filteredCategoryList.isEmpty()) 
+				return false;
+			else if (filteredCategoryList.size() > 1) 
+				throw new Exception("There should be only one target category");
+			else if (filteredCategoryList.size() == 1) 
+				return true;
+			else 
+				return false;
 		} catch (Exception e) {
 			throw new Exception(e);
 		}
