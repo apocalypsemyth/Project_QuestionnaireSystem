@@ -130,9 +130,11 @@ $(document).ready(function () {
     		let strSelectedCategoryText = strSelectedCategory.text();
     		let strSelectedCategoryId = strSelectedCategory.val();
         	if (strSelectedCategoryText === customizedQuestionOfCategory) {
+				$(btnAddQuestion).removeAttr("href");
 				ResetQuestionInputs();
 			}
 			else {
+				$(btnAddQuestion).removeAttr("href");
 				$.when(ShowToAddQuestionOfCommonQuestion(strSelectedCategoryId))
 				.fail(function () {
 					setTimeout(() => {
