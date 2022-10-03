@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,84 +43,6 @@ public class CommonQuestionController {
 	
 	@Autowired
 	private DataTransactionalService dataTransactionalService;
-	
-	@PostMapping(value = "/getCommonQuestion", 
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	
-	public CommonQuestionResp getCommonQuestion(
-			@RequestBody PostCommonQuestionReq req,
-			HttpSession session
-			) {
-		CommonQuestionSession commonQuestionSessionResp = new CommonQuestionSession();
-		String commonQuestionId = req.getCommonQuestionId();
-		Boolean isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
-		try {
-			if (isUpdateMode == null) {
-				if (!StringUtils.hasText(commonQuestionId)) {
-					session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, false);
-					return new CommonQuestionResp(
-							RtnInfo.SUCCESSFUL.getCode(), 
-							RtnInfo.SUCCESSFUL.getMessage(),
-							null
-							);
-				}
-				session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, true);
-				isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
-			}
-			
-			CommonQuestionSession commonQuestionSession = 
-					commonQuestionSessionService.getCommonQuestionSession(session);
-			if (isUpdateMode) {
-				if (commonQuestionSession == null) {
-					CommonQuestion commonQuestion = 
-							commonQuestionService.getCommonQuestion(commonQuestionId);
-					if (commonQuestion == null) {
-						return new CommonQuestionResp(
-								RtnInfo.NOT_FOUND.getCode(), 
-								RtnInfo.NOT_FOUND.getMessage(),
-								null
-								);
-					}
-					commonQuestionSessionService
-					.setCommonQuestionSession(session, new CommonQuestionSession(commonQuestion));
-					commonQuestionSession =
-							commonQuestionSessionService.getCommonQuestionSession(session);
-					if (commonQuestionSession == null) {
-						return new CommonQuestionResp(
-								RtnInfo.FAILED.getCode(), 
-								RtnInfo.FAILED.getMessage(),
-								null
-								);
-					}
-					return new CommonQuestionResp(
-							RtnInfo.SUCCESSFUL.getCode(), 
-							RtnInfo.SUCCESSFUL.getMessage(),
-							commonQuestionSession
-							);
-				}
-				return new CommonQuestionResp(
-						RtnInfo.SUCCESSFUL.getCode(), 
-						RtnInfo.SUCCESSFUL.getMessage(),
-						commonQuestionSession
-						);
-			}
-			
-			commonQuestionSessionResp = commonQuestionSession;
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return new CommonQuestionResp(
-					RtnInfo.FAILED.getCode(), 
-					RtnInfo.FAILED.getMessage(),
-					null
-					);
-		}
-		return new CommonQuestionResp(
-				RtnInfo.SUCCESSFUL.getCode(), 
-				RtnInfo.SUCCESSFUL.getMessage(),
-				commonQuestionSessionResp
-				);
-	}
 	
 	@GetMapping(value = "/getCommonQuestionList", 
 			consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -190,6 +111,42 @@ public class CommonQuestionController {
 				);
 	}
 	
+	@PostMapping(value = "/whetherNameOfCommonQuestionIsCustomizedQuestion", 
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	
+	public CommonQuestionResp whetherNameOfCommonQuestionIsCustomizedQuestion(
+			@RequestBody PostCommonQuestionReq req,
+			HttpSession session
+			) {
+		try {
+			boolean whetherNameOfCommonQuestionIsCustomizedQuestion = 
+					commonQuestionSessionService
+					.whetherNameOfCommonQuestionIsCustomizedQuestion(req);
+			CommonQuestionSession commonQuestionSession = 
+					commonQuestionSessionService.getCommonQuestionSession(session);
+			if (whetherNameOfCommonQuestionIsCustomizedQuestion) {
+				return new CommonQuestionResp(
+						RtnInfo.NAME_OF_COMMON_QUESTION_IS_CUSTOMIZED_QUESTION.getCode(), 
+						RtnInfo.NAME_OF_COMMON_QUESTION_IS_CUSTOMIZED_QUESTION.getMessage(),
+						commonQuestionSession
+						);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new CommonQuestionResp(
+					RtnInfo.FAILED.getCode(), 
+					RtnInfo.FAILED.getMessage(),
+					null
+					);
+		}
+		return new CommonQuestionResp(
+				RtnInfo.SUCCESSFUL.getCode(), 
+				RtnInfo.SUCCESSFUL.getMessage(),
+				null
+				);
+	}
+	
 	@PostMapping(value = "/createCommonQuestion", 
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -251,6 +208,7 @@ public class CommonQuestionController {
 						null
 						);
 			}
+			
 			commonQuestionSessionResp = updatedCommonQuestionSession;
 		} catch (Exception e) {
 			logger.error(e.getMessage());

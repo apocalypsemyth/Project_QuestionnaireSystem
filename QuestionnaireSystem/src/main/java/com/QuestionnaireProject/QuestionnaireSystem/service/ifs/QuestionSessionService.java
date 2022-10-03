@@ -54,16 +54,18 @@ public interface QuestionSessionService {
 			) throws Exception;
 	
 	/**
-	 * 創建問題Session，藉由問題請求Body和是否為問卷詳細頁面。
+	 * 創建問題Session，藉由問題請求Body和是否為問卷詳細頁面和問題是否來自常用問題。
 	 * @param HttpSession session
 	 * @param Object 問題請求Body
 	 * @param boolean 是否為問卷詳細頁面
+	 * @param boolean 問題是否來自常用問題
 	 * @throws 創建問題Session時，發生錯誤。
 	 */
 	public void createQuestionSession(
 			HttpSession session,
 			PostQuestionReq postQuestionReq,
-			boolean isQuestionnaire
+			boolean isQuestionnaire,
+			boolean isFromCommonQuestion
 			) throws Exception;
 	
 	/**
@@ -98,6 +100,38 @@ public interface QuestionSessionService {
 			) throws Exception;
 	
 	/**
+	 * 取得設置問題種類屬性的常用問題其問題Session列表，藉由問題種類和問題Session列表。
+	 * @param String 問題種類
+	 * @param List 問題Session列表
+	 * @return List 設置問題種類屬性的常用問題其問題列表
+	 * @throws 取得設置問題種類屬性的常用問題其問題列表時，發生錯誤。
+	 */
+	public List<QuestionSession> getSetCategoryNameOfQuestionListOfCommonQuestionList(
+			String categoryName,
+			List<QuestionSession> questionSessionList
+			) throws Exception;
+	
+	/**
+	 * 取得沒被標記為刪除的問題Session列表，藉由問題Session列表。
+	 * @param List 問題Session列表
+	 * @return List 問題Session列表
+	 * @throws 檢查是否全部的問題Session列表被標記刪除時，發生錯誤。
+	 */
+	public List<QuestionSession> getQuestionSessionThatIsNotDeletedList(
+			List<QuestionSession> questionSessionList
+			) throws Exception;
+	
+	/**
+	 * 檢查問題是否來自常用問題，藉由問題請求Body。
+	 * @param Object 問題請求Body
+	 * @return boolean 問題是否來自常用問題
+	 * @throws 檢查問題是否來自常用問題時，發生錯誤。
+	 */
+	public boolean isQuestionFromCommonQuestion(
+			PostQuestionReq postQuestionReq
+			) throws Exception;
+	
+	/**
 	 * 檢查是否存有至少一個必填問題，藉由問題Session列表。
 	 * @param List 問題Session列表
 	 * @return boolean 是否存有至少一個必填問題
@@ -108,50 +142,9 @@ public interface QuestionSessionService {
 			) throws Exception;
 	
 	/**
-	 * 檢查是否套用常用問題其之問題列表於問卷上，藉由問題Session列表和是否為更新模式。
+	 * 檢查是否需要轉換常用問題其問題列表為問卷其問題列表，藉由問題Session列表。
 	 * @param List 問題Session列表
-	 * @param boolean 是否為更新模式
-	 * @return boolean 是否套用常用問題其之問題列表於問卷上
-	 * @throws 檢查是否套用常用問題其之問題列表於問卷上時，發生錯誤。
-	 */
-	public boolean isSetQuestionListOfCommonQuestion(
-			List<QuestionSession> questionSessionList,
-			boolean isUpdateMode
-			) throws Exception;
-	
-	/**
-	 * 取得設置Id、IsCreated和IsTemplateOfCommonQuestion屬性的常用問題其問題Session列表，藉由問題Session列表。
-	 * @param List 問題Session列表
-	 * @return List 設置Id、IsCreated和IsTemplateOfCommonQuestion屬性的常用問題其問題列表
-	 * @throws 取得設置Id、IsCreated和IsTemplateOfCommonQuestion屬性的常用問題其問題列表時，發生錯誤。
-	 */
-	public List<QuestionSession> getSetPropertyOfQuestionListOfCommonQuestion(
-			List<QuestionSession> questionSessionList
-			) throws Exception;
-	
-	/**
-	 * 設置IsDeleted屬性於問卷或常用問題其之問題Session列表。
-	 * @param HttpSession session
-	 * @param List 問題Session列表
-	 * @throws 設置IsDeleted屬性於問卷或常用問題其之問題列表時，發生錯誤。
-	 */
-	public void setIsDeletedOfQuestionListOrOfCommonQuestion(
-			HttpSession session,
-			List<QuestionSession> questionSessionList
-			) throws Exception;
-	
-	/**
-	 * 部分轉換常用問題其問題列表為問卷其問題列表。
-	 * @param HttpSession session
-	 * @throws 部分轉換常用問題其問題列表為問卷其問題列表時，發生錯誤。
-	 */
-	public void convertQuestionListOfCommonQuestionToQuestionList(
-			HttpSession session
-			) throws Exception;
-	
-	/**
-	 * 是否需要轉換常用問題其問題列表為問卷其問題列表，藉由問題Session列表。
-	 * @param List 問題Session列表
+	 * @return boolean 檢查是否需要轉換常用問題其問題列表為問卷其問題列表
 	 * @throws 是否需要轉換常用問題其問題列表為問卷其問題列表時，發生錯誤。
 	 */
 	public boolean isNeedToConvertQuestionListOfCommonQuestionToQuestionList(
@@ -161,25 +154,11 @@ public interface QuestionSessionService {
 	/**
 	 * 完全轉換常用問題其問題列表為問卷其問題列表，藉由問卷Id和問題Session列表。
 	 * @param List 問題Session列表
+	 * @return List 問題Session列表
 	 * @throws 完全轉換常用問題其問題列表為問卷其問題列表時，發生錯誤。
 	 */
 	public List<QuestionSession> convertQuestionListOfCommonQuestionToQuestionList(
-			String questionnaireIdStr,
 			List<QuestionSession> questionSessionList
-			) throws Exception;
-	
-	/**
-	 * 取得改變資料Id的常用問題其之問題列表，藉由問卷Id、問題Session列表和是否為更新模式。
-	 * @param String 問卷Id
-	 * @param List 問題Session列表
-	 * @param boolean 是否為更新模式
-	 * @return List 改變資料Id的常用問題其之問題列表
-	 * @throws 取得改變資料Id的常用問題其之問題列表時，發生錯誤。
-	 */
-	public List<QuestionSession> getQuestionListOfCommonQuestionForChangedIds(
-			String questionnaireIdStr,
-			List<QuestionSession> questionSessionList,
-			boolean isUpdateMode
 			) throws Exception;
 	
 }

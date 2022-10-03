@@ -52,6 +52,16 @@ public interface CommonQuestionSessionService {
 			) throws Exception;
 	
 	/**
+	 * 檢查常用問題其名稱是否為自訂問題，藉由常用問題請求Body。
+	 * @param Object 常用問題請求Body
+	 * @return boolean 常用問題其名稱是否為自訂問題
+	 * @throws 檢查常用問題其名稱是否為自訂問題時，發生錯誤。
+	 */
+	public boolean whetherNameOfCommonQuestionIsCustomizedQuestion(
+			PostCommonQuestionReq postCommonQuestionReq
+			) throws Exception;
+	
+	/**
 	 * 更新常用問題Session，藉由常用問題請求Body。
 	 * @param HttpSession session
 	 * @param Object 常用問題請求Body

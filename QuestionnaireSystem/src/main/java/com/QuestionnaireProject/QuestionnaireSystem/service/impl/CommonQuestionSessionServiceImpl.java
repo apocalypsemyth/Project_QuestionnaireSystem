@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 
+import com.QuestionnaireProject.QuestionnaireSystem.constant.DataConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.constant.SessionConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.model.CommonQuestionSession;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.CommonQuestionSessionService;
@@ -71,6 +72,21 @@ public class CommonQuestionSessionServiceImpl implements CommonQuestionSessionSe
 					.equals(postCommonQuestionReq.getCommonQuestionName())) 
 				return false;
 			return true;
+		} catch (Exception e) {
+			throw new Exception(e);
+		}
+	}
+	
+	@Override
+	public boolean whetherNameOfCommonQuestionIsCustomizedQuestion(
+			PostCommonQuestionReq postCommonQuestionReq
+			) throws Exception {
+		try {
+			if (postCommonQuestionReq.getCommonQuestionName()
+					.equals(DataConstant.Key.CUSTOMIZED_QUESTION_OF_CATEGORY)) {
+				return true;
+			}
+			return false;
 		} catch (Exception e) {
 			throw new Exception(e);
 		}

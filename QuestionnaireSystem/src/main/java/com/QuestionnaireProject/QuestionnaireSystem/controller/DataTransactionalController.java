@@ -13,6 +13,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.QuestionnaireProject.QuestionnaireSystem.constant.DataConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.constant.SessionConstant;
+import com.QuestionnaireProject.QuestionnaireSystem.entity.Category;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.CommonQuestion;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.Question;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.Questionnaire;
@@ -32,6 +34,7 @@ import com.QuestionnaireProject.QuestionnaireSystem.model.DataListForPager;
 import com.QuestionnaireProject.QuestionnaireSystem.model.QuestionSession;
 import com.QuestionnaireProject.QuestionnaireSystem.model.QuestionnaireSession;
 import com.QuestionnaireProject.QuestionnaireSystem.model.UserAnswerDetailForCSV;
+import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.CategoryService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.CommonQuestionService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.CommonQuestionSessionService;
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.DataTransactionalService;
@@ -43,9 +46,11 @@ import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.UserAnswerServic
 import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.UserService;
 import com.QuestionnaireProject.QuestionnaireSystem.vo.CommonQuestionListResp;
 import com.QuestionnaireProject.QuestionnaireSystem.vo.CommonQuestionResp;
+import com.QuestionnaireProject.QuestionnaireSystem.vo.PostCategory;
 import com.QuestionnaireProject.QuestionnaireSystem.vo.PostCommonQuestionReq;
 import com.QuestionnaireProject.QuestionnaireSystem.vo.PostQuestionnaireReq;
 import com.QuestionnaireProject.QuestionnaireSystem.vo.PostUserAnswerReq;
+import com.QuestionnaireProject.QuestionnaireSystem.vo.QuestionListResp;
 import com.QuestionnaireProject.QuestionnaireSystem.vo.QuestionnaireListResp;
 import com.QuestionnaireProject.QuestionnaireSystem.vo.QuestionnaireResp;
 import com.QuestionnaireProject.QuestionnaireSystem.vo.QuestionnaireStatisticsResp;
@@ -73,6 +78,9 @@ public class DataTransactionalController {
 	
 	@Autowired
 	private CommonQuestionSessionService commonQuestionSessionService;
+	
+	@Autowired
+	private CategoryService categoryService;
 	
 	@Autowired
 	private UserService userService;
@@ -150,6 +158,96 @@ public class DataTransactionalController {
 			isNull = RtnInfo.FAILED.getMessage();
 			return isNull;
 		}
+	}
+	
+	@PostMapping(value = "/showToAddQuestionOfCommonQuestion", 
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	
+	public QuestionListResp showToAddQuestionOfCommonQuestion(
+			@RequestBody PostCategory req, 
+			HttpSession session
+			) {
+		List<QuestionSession> questionListResp = new ArrayList<>();
+		Boolean isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
+		try {
+			List<QuestionSession> questionSessionList = 
+					questionSessionService.getQuestionSessionList(session);
+			if (isUpdateMode) {
+				if (questionSessionList == null) {
+					return new QuestionListResp(
+							RtnInfo.FAILED.getCode(),
+							RtnInfo.FAILED.getMessage(),
+							null
+							);
+				}
+			}
+			
+			String categoryIdStr = req.getCategoryId();
+			if (!StringUtils.hasText(categoryIdStr)) {
+				return new QuestionListResp(
+						RtnInfo.PARAMETER_REQUIRED.getCode(),
+						RtnInfo.PARAMETER_REQUIRED.getMessage(),
+						null
+						);
+			}
+			
+			Category category = categoryService.getCategory(categoryIdStr);
+			if (category == null) {
+				return new QuestionListResp(
+						RtnInfo.NOT_FOUND.getCode(),
+						RtnInfo.NOT_FOUND.getMessage(),
+						null
+						);
+			}
+			
+			String commonQuestionId = category.getCommonQuestionId().toString();
+			List<Question> questionList = 
+					questionService.getQuestionList(commonQuestionId, false);
+			if (questionList == null) {
+				return new QuestionListResp(
+						RtnInfo.NOT_FOUND.getCode(),
+						RtnInfo.NOT_FOUND.getMessage(),
+						null
+						);
+			}
+			
+			List<QuestionSession> builtQuestionSessionList = 
+					questionSessionService.getQuestionSessionList(questionList);
+			if (builtQuestionSessionList == null) {
+				return new QuestionListResp(
+						RtnInfo.FAILED.getCode(),
+						RtnInfo.FAILED.getMessage(),
+						null
+						);
+			}
+			
+			String categoryName = category.getCategoryName();
+			List<QuestionSession> builtQuestionSessionFromOfCommonQuestionList = 
+					questionSessionService
+					.getSetCategoryNameOfQuestionListOfCommonQuestionList(categoryName, builtQuestionSessionList);
+			if (builtQuestionSessionFromOfCommonQuestionList == null) {
+				return new QuestionListResp(
+						RtnInfo.FAILED.getCode(),
+						RtnInfo.FAILED.getMessage(),
+						null
+						);
+			}
+			
+			questionListResp = builtQuestionSessionFromOfCommonQuestionList;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new QuestionListResp(
+					RtnInfo.FAILED.getCode(),
+					RtnInfo.FAILED.getMessage(),
+					null
+					);
+		}
+		return new QuestionListResp(
+				RtnInfo.SUCCESSFUL.getCode(),
+				RtnInfo.SUCCESSFUL.getMessage(),
+				questionListResp
+				);
 	}
 	
 	@PostMapping(value = "/getUserAnswerDetail", 
@@ -491,7 +589,6 @@ public class DataTransactionalController {
 			HttpSession session
 			) {
 		Boolean isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
-		Boolean isSetQuestionListOfCommonQuestion = (Boolean) session.getAttribute(SessionConstant.Name.IS_SET_QUESTION_LIST_OF_COMMON_QUESTION);
 		try {
 			QuestionnaireSession questionnaireSession = 
 					questionnaireSessionService.getQuestionnaireSession(session);
@@ -526,38 +623,22 @@ public class DataTransactionalController {
 						);
 			}
 			
-			if (isSetQuestionListOfCommonQuestion) {
-				List<QuestionSession> questionListOfCommonQuestionForChangedIds = 
+			boolean isNeedToConvertQuestionListOfCommonQuestionToQuestionList = 
+					questionSessionService
+					.isNeedToConvertQuestionListOfCommonQuestionToQuestionList(questionSessionList);
+			if (isNeedToConvertQuestionListOfCommonQuestionToQuestionList) {
+				List<QuestionSession> convertedQuestionList = 
 						questionSessionService
-						.getQuestionListOfCommonQuestionForChangedIds(questionnaireIdStr, questionSessionList, isUpdateMode);
-				if (questionListOfCommonQuestionForChangedIds == null 
-						|| questionListOfCommonQuestionForChangedIds.isEmpty()) {
+						.convertQuestionListOfCommonQuestionToQuestionList(questionSessionList);
+				if (convertedQuestionList == null 
+						|| convertedQuestionList.isEmpty()) {
 					return new QuestionnaireResp(
 							RtnInfo.FAILED.getCode(), 
 							RtnInfo.FAILED.getMessage(),
 							null
 							);
 				}
-				questionSessionList = questionListOfCommonQuestionForChangedIds;
-			}
-			else {
-				boolean isNeedToConvertQuestionListOfCommonQuestionToQuestionList = 
-						questionSessionService
-						.isNeedToConvertQuestionListOfCommonQuestionToQuestionList(questionSessionList);
-				if (isNeedToConvertQuestionListOfCommonQuestionToQuestionList) {
-					List<QuestionSession> convertedQuestionList = 
-							questionSessionService
-							.convertQuestionListOfCommonQuestionToQuestionList(questionnaireIdStr, questionSessionList);
-					if (convertedQuestionList == null 
-							|| convertedQuestionList.isEmpty()) {
-						return new QuestionnaireResp(
-								RtnInfo.FAILED.getCode(), 
-								RtnInfo.FAILED.getMessage(),
-								null
-								);
-					}
-					questionSessionList = convertedQuestionList;
-				}
+				questionSessionList = convertedQuestionList;
 			}
 			
 			dataTransactionalService.saveQuestionnaire(questionnaireSession, questionSessionList);

@@ -284,13 +284,22 @@ function ShowQuestionListByIsDeleted(objArrQuestion, boolIsQuestionnaire) {
  * @param String 種類名稱(自訂問題/常用問題)
  */
 function ResetQuestionInputs(strCategoryName = customizedQuestionOfCategory) {
-    SelectCategoryInSelectCategoryList(strCategoryName);
-    $(selectTypingList + " option").filter(function () {
-        return $(this).text() === SINGLE_SELECT;
-    }).prop("selected", true);
-    $(txtQuestionName).val("");
-    $(txtQuestionAnswer).val("");
-    $(ckbQuestionRequired).prop("checked", false);
+	//為了問卷詳細頁面的Async方法
+	let defer = $.Deferred();
+	try {
+	    SelectCategoryInSelectCategoryList(strCategoryName);
+	    $(selectTypingList + " option").filter(function () {
+	        return $(this).text() === SINGLE_SELECT;
+	    }).prop("selected", true);
+	    $(txtQuestionName).val("");
+	    $(txtQuestionAnswer).val("");
+	    $(ckbQuestionRequired).prop("checked", false);
+		defer.resolve();
+	} catch (e) {
+		console.log(`Reset question inputs error: ${e}`);
+		defer.reject();
+	}
+    return defer.promise();
 }
 /**
  * 重置常用問題其問題輸入控制項資料，藉由種類名稱(自訂問題/常用問題)。
@@ -311,7 +320,7 @@ function ResetQuestionOfCommonQuestionInputs(strCategoryName = commonQuestionOfC
 	    $(ckbQuestionRequiredOfCommonQuestion).prop("checked", false);
 	    defer.resolve();
 	} catch (e) {
-		console.log(`Reset question of common question inputs error: ${e}`)
+		console.log(`Reset question of common question inputs error: ${e}`);
 		defer.reject();
 	}
 	return defer.promise();
@@ -349,6 +358,12 @@ function CreateQuestion(objQuestion, boolIsQuestionnaire) {
                 || message === RtnInfo.FAILED.message) {
                 alert(RtnInfo.FAILED.message);
                 defer.reject();
+            }
+            else if (status_code === RtnInfo.JUST_ONE_QUESTION.statusCode
+                || message === RtnInfo.JUST_ONE_QUESTION.message) {
+                alert(RtnInfo.JUST_ONE_QUESTION.message);
+                ShowQuestionListByIsDeleted(question_session_list, boolIsQuestionnaire);
+                return;
             }
             else {
                 ShowQuestionListByIsDeleted(question_session_list, boolIsQuestionnaire);
@@ -454,7 +469,7 @@ function SetQuestionOfCommonQuestionInputs(objQuestionOfCommonQuestion) {
     $(ckbQuestionRequiredOfCommonQuestion).prop("checked", questionRequired);
 }
 /**
- * 顯示欲更新問卷其問題，藉由其問題Id和是否為問卷詳細頁面。
+ * 顯示欲更新問卷其問題於輸入控制項上，藉由其問題Id和是否為問卷詳細頁面。
  * @param String 問卷其問題Id
  * @param Boolean 是否為問卷詳細頁面
  */
@@ -692,6 +707,46 @@ function CreateQuestionnaire(objQuestionnaire) {
                 questionnaire_session.startDate = FormatDate(startDate);
                 questionnaire_session.endDate = HasText(endDate) ? FormatDate(endDate) : null;
                 SetQuestionnaireInputs(questionnaire_session);
+                defer.resolve();
+            }
+        },
+        error: function (msg) {
+            console.log(msg);
+            alert(errorMessageOfAjax);
+            defer.reject();
+        },
+    });
+
+    return defer.promise();
+}
+/**
+ * 檢查常用問題其名稱是否為自訂問題，藉由常用問題請求Body。
+ * @param Object 常用問題請求Body
+ * @return Promise promise
+ */
+function WhetherNameOfCommonQuestionIsCustomizedQuestion(objQuestionnaire) {
+    let defer = $.Deferred();
+
+    $.ajax({
+        url: `${JAVA_SERVICE_DOMAIN}/whetherNameOfCommonQuestionIsCustomizedQuestion`,
+        method: METHOD_POST,
+        contentType: APPLICATION_JSON,
+        dataType: DATA_TYPE_JSON,
+        data: JSON.stringify(objQuestionnaire),
+        success: function (objQuestionnaireResp) {
+            let { status_code, message } = objQuestionnaireResp;
+
+            if (status_code === RtnInfo.FAILED.statusCode
+                || message === RtnInfo.FAILED.message) {
+                alert(RtnInfo.FAILED.message);
+                defer.reject();
+            }
+            else if (status_code === RtnInfo.NAME_OF_COMMON_QUESTION_IS_CUSTOMIZED_QUESTION.statusCode
+                || message === RtnInfo.NAME_OF_COMMON_QUESTION_IS_CUSTOMIZED_QUESTION.message) {
+                alert(RtnInfo.NAME_OF_COMMON_QUESTION_IS_CUSTOMIZED_QUESTION.message);
+                return;
+            }
+            else {
                 defer.resolve();
             }
         },

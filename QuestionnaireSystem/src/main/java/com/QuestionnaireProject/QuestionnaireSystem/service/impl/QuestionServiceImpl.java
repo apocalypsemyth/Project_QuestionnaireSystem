@@ -71,8 +71,9 @@ public class QuestionServiceImpl implements QuestionService {
 					questionDao
 					.findByCommonQuestionIdAndIsTemplateOfCommonQuestion(commonQuestionId, false);
 			if (questionListOfCommonQuestion == null 
-					|| questionListOfCommonQuestion.isEmpty()) return false;
-			
+					|| questionListOfCommonQuestion.isEmpty()) {
+				return false;
+			}
 			return true;
 		} catch (Exception e) {
 			throw new Exception(e);

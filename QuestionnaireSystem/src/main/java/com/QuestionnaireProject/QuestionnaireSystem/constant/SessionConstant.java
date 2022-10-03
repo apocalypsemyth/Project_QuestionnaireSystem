@@ -9,8 +9,6 @@ public class SessionConstant {
 		
 		public static final String IS_UPDATE_MODE = "isUpdateMode";
 		
-		public static final String IS_SET_QUESTION_LIST_OF_COMMON_QUESTION = "isSetQuestionListOfCommonQuestion";
-		
 		public static final String QUESTIONNAIRE = "questionnaire";
 
 		public static final String QUESTIONNAIRE_LIST = "questionnaireList";

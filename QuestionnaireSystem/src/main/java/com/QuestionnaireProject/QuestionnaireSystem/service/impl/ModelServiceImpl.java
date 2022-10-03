@@ -278,16 +278,4 @@ public class ModelServiceImpl implements ModelService {
 		}
 	}
 	
-	@Override
-	public Model setErrorMessage(
-			Model model,
-			String errorMessage
-			) throws Exception {
-		try {
-			return model.addAttribute(ModelConstant.Key.ERROR_MESSAGE, errorMessage);
-		} catch (Exception e) {
-			throw new Exception(e);
-		}
-	}
-	
 }

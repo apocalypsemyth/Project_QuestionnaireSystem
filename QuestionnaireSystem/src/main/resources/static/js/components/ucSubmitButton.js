@@ -43,6 +43,9 @@ $(document).ready(function () {
 			        	: CreateCommonQuestion;
 		        $.when(HasQuestionSession())
 		        .then(function () {
+			        return $.when(WhetherNameOfCommonQuestionIsCustomizedQuestion(objCommonQuestion));
+				})
+		        .then(function () {
 	                return $.when(resultOperateCommonQuestion(objCommonQuestion));
 		        })
 		        .then(function () {

@@ -47,7 +47,10 @@ $(document).ready(function () {
 
                 if (strQuestionIdOfCommonQuestion) {
                     objQuestionOfCommonQuestion.question_id = strQuestionIdOfCommonQuestion;
-                    $.when(UpdateCommonQuestion(objCommonQuestion))
+                    $.when(WhetherNameOfCommonQuestionIsCustomizedQuestion(objCommonQuestion))
+                    .then(function () {
+	                    return $.when(UpdateCommonQuestion(objCommonQuestion));
+					})
                     .then(function () {
 						return $.when(UpdateQuestion(objQuestionOfCommonQuestion, false));
 					})
@@ -59,7 +62,10 @@ $(document).ready(function () {
                     $(this).removeAttr("href");
                 }
                 else {
-                    $.when(UpdateCommonQuestion(objCommonQuestion))
+					$.when(WhetherNameOfCommonQuestionIsCustomizedQuestion(objCommonQuestion))
+					.then(function () {
+	                    return $.when(UpdateCommonQuestion(objCommonQuestion));
+					})
                     .then(function () {
 						return $.when(CreateQuestion(objQuestionOfCommonQuestion, false));
 					})
@@ -71,7 +77,10 @@ $(document).ready(function () {
                 }
             }
             else {
-				$.when(CreateCommonQuestion(objCommonQuestion))
+				$.when(WhetherNameOfCommonQuestionIsCustomizedQuestion(objCommonQuestion))
+				.then(function () {
+					return $.when(CreateCommonQuestion(objCommonQuestion));
+				})
 				.then(function () {
 					return $.when(CreateQuestion(objQuestionOfCommonQuestion, false));
 				})

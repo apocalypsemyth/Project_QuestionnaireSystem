@@ -1,7 +1,6 @@
 $(document).ready(function () {
     if (!IsTargetUrl(Url.BACK_ADMIN.uri + Url.QUESTIONNAIRE_DETAIL.uri)) {
         sessionStorage.removeItem(activeTab);
-        sessionStorage.removeItem(currentSetCommonQuestionOnQuestionnaireState);
         sessionStorage.removeItem(currentCommonQuestionOfCategoryId);
         sessionStorage.removeItem(currentUserList);
         sessionStorage.removeItem(currentUserListShowState);
@@ -96,13 +95,13 @@ $(document).ready(function () {
 		});
 	    $.when(GetCategoryList(), GetTypingList())
         .then(function () {
-			return $.when(GetIsSetQuestionListOfCommonQuestion());
+			return $.when(ResetQuestionInputs());
 		})
 		.then(function () {
 			return $.when(SetCommonQuestionOfCategoryId());
 		})
 		.then(function () {
-			return $.when(ShowOrHideCommonQuestionOfCategory());
+			return $.when(HideCommonQuestionOfCategory());
 		})
 		.then(function () {
 			return $.when(GetIsUpdateModeSession());
@@ -124,88 +123,23 @@ $(document).ready(function () {
             $(ulQuestionnaireDetailTabs + " a[href='" + strActiveTab + "']").tab("show");
 		}
 		
-        $(selectCategoryList).click(function (e) {
+        $(selectCategoryList).change(function (e) {
             e.preventDefault();
-
-            let strSelectedCategoryText = $(this).find(":selected").text();
-            let isSetCustomizedOrCommonQuestionOfCategory =
-                (strSelectedCategoryText === customizedQuestionOfCategory
-                    || strSelectedCategoryText === commonQuestionOfCategory);
-            let isUpdateMode = HasText(GetQueryParamOfQueryString("ID"));
-            let strCurrentSetCommonQuestionOnQuestionnaireState =
-                sessionStorage.getItem(currentSetCommonQuestionOnQuestionnaireState);
-            let strCurrentCommonQuestionOfCategoryId =
-                sessionStorage.getItem(currentCommonQuestionOfCategoryId);
-
-            if (strCurrentSetCommonQuestionOnQuestionnaireState === setState) {
-                if (strSelectedCategoryText === customizedQuestionOfCategory) {
-                    let isSetCustomizedQuestion =
-                        confirm("選擇常用問題後，\n再次選擇自訂問題，\n會將先前的常用問題全部移除，\n請問仍要繼續嗎？");
-                    if (isSetCustomizedQuestion) {
-                    	HideCategoryInSelectCategoryList(strCurrentCommonQuestionOfCategoryId);
-                        SelectCategoryInSelectCategoryList();
-                        $.when(SetIsSetQuestionListOfCommonQuestion(false))
-                        .then(function () {
-	                        return $.when(DeleteSetQuestionListOfCommonQuestion());
-						})
-						.fail(function () {
-							setTimeout(() => {
-								ReplaceUrl(Url.BACK_ADMIN.uri + Url.QUESTIONNAIRE_LIST.uri);
-							}, DELAY_TIME);
-						});
-                    }
-                    else {
-                        setTimeout(() => { 
-							SelectCategoryInSelectCategoryList(); 
-                        });
-                    }
-                }
-                else if (!isSetCustomizedOrCommonQuestionOfCategory) {
-                    let isSetOtherCommonQuestion =
-                        confirm("選擇常用問題後，\n再選擇其他常用問題，\n會將先前的常用問題全部移除，\n請問仍要繼續嗎？");
-                    if (isSetOtherCommonQuestion) {
-                        let strSelectedCategoryId = $(this).val();
-                        $.when(DeleteSetQuestionListOfCommonQuestion())
-                        .then(function () {
-                        	return $.when(SetQuestionListOfCommonQuestion(strSelectedCategoryId));
-						})
-						.fail(function () {
-							setTimeout(() => {
-								ReplaceUrl(Url.BACK_ADMIN.uri + Url.QUESTIONNAIRE_LIST.uri);
-							}, DELAY_TIME);
-						});
-                    }
-                }
-            }
-            else {
-                if (isUpdateMode && !isSetCustomizedOrCommonQuestionOfCategory) {
-                    let isSetAnyTemplateOfCommonQuestion =
-                        confirm("如果選擇常用問題，\n現在的自訂問題會全部移除，\n請問仍要繼續嗎？");
-                    if (isSetAnyTemplateOfCommonQuestion) {
-                        let strSelectedCategoryId = $(this).val();
-                        $.when(DeleteSetQuestionListOfCommonQuestion())
-                        .then(function () {
-                        	return $.when(SetQuestionListOfCommonQuestion(strSelectedCategoryId));
-						})
-						.fail(function () {
-							setTimeout(() => {
-								ReplaceUrl(Url.BACK_ADMIN.uri + Url.QUESTIONNAIRE_LIST.uri);
-							}, DELAY_TIME);
-						});
-                    }
-                    else {
-						setTimeout(() => { 
-							SelectCategoryInSelectCategoryList(); 
-                        });
-					}
-                }
-                else if (isSetCustomizedOrCommonQuestionOfCategory)
-                    return;
-                else {
-                  	let strSelectedCategoryId = $(this).val();
-            		SetQuestionListOfCommonQuestion(strSelectedCategoryId);
-                }
-            }
+			
+			let strSelectedCategory = $(this).find(":selected");
+    		let strSelectedCategoryText = strSelectedCategory.text();
+    		let strSelectedCategoryId = strSelectedCategory.val();
+        	if (strSelectedCategoryText === customizedQuestionOfCategory) {
+				ResetQuestionInputs();
+			}
+			else {
+				$.when(ShowToAddQuestionOfCommonQuestion(strSelectedCategoryId))
+				.fail(function () {
+					setTimeout(() => {
+						ReplaceUrl(Url.BACK_ADMIN.uri + Url.QUESTIONNAIRE_LIST.uri);
+					}, DELAY_TIME);
+				});
+			}
         });
         $(btnAddQuestion).click(function (e) {
             e.preventDefault();
@@ -223,30 +157,8 @@ $(document).ready(function () {
                 alert(isValidQuestion);
                 return;
             }
-
-            let strCurrentSetCommonQuestionOnQuestionnaireState =
-                sessionStorage.getItem(currentSetCommonQuestionOnQuestionnaireState);
-            let strCurrentCommonQuestionOfCategoryId =
-                sessionStorage.getItem(currentCommonQuestionOfCategoryId);
-            if (strCurrentSetCommonQuestionOnQuestionnaireState === setState) {
-                let isToModifyCommonQuestion =
-                    confirm("如果對常用問題進行任何增刪修，\n其將成為自訂問題，\n請問仍要繼續嗎？");
-                if (!isToModifyCommonQuestion)
-                    return;
-                else {
-                	setTimeout(() => {
-						HideCategoryInSelectCategoryList(strCurrentCommonQuestionOfCategoryId);
-	                    SelectCategoryInSelectCategoryList(); 
-	                    SetElementCurrentStateSession(
-	                        currentSetCommonQuestionOnQuestionnaireState,
-	                        notSetState
-	                    );
-					}); 
-                    objQuestion.question_category = customizedQuestionOfCategory;
-                }
-            }
 			
-            let strQuestionnaireId = GetQueryParamOfQueryString("ID");
+			let strQuestionnaireId = GetQueryParamOfQueryString("ID");
             if (HasText(strQuestionnaireId)) {
                 let strQuestionId = $(this).attr("href");
 
@@ -299,27 +211,6 @@ $(document).ready(function () {
                 return;
             }
 			
-            let strCurrentSetCommonQuestionOnQuestionnaireState =
-                sessionStorage.getItem(currentSetCommonQuestionOnQuestionnaireState);
-            let strCurrentCommonQuestionOfCategoryId =
-                sessionStorage.getItem(currentCommonQuestionOfCategoryId);
-            if (strCurrentSetCommonQuestionOnQuestionnaireState === setState) {
-                let isToModifyCommonQuestion =
-                    confirm("如果對常用問題進行任何增刪修，\n其將成為自訂問題，\n請問仍要繼續嗎？");
-                if (!isToModifyCommonQuestion)
-                    return;
-                else {
-					setTimeout(() => {
-	                    HideCategoryInSelectCategoryList(strCurrentCommonQuestionOfCategoryId);
-	                    SelectCategoryInSelectCategoryList();
-	                    SetElementCurrentStateSession(
-	                        currentSetCommonQuestionOnQuestionnaireState,
-	                        notSetState
-	                    );
-					});
-                }
-            }
-
             DeleteQuestionList(arrCheckedQuestionId, true);
         });
 

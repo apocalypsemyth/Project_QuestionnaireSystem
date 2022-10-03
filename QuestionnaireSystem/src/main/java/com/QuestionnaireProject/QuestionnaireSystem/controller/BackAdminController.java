@@ -157,7 +157,6 @@ public class BackAdminController {
 		else 
 			session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, isUpdateMode);
 		isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
-		Boolean isSetQuestionListOfCommonQuestion = (Boolean) session.getAttribute(SessionConstant.Name.IS_SET_QUESTION_LIST_OF_COMMON_QUESTION);
 		try {
 			if (isUpdateMode == null)
 				throw new Exception("isUpdateMode session is null");
@@ -251,35 +250,6 @@ public class BackAdminController {
 				}
 			}
 			
-			isSetQuestionListOfCommonQuestion = 
-					questionSessionService
-					.isSetQuestionListOfCommonQuestion(questionSessionList, isUpdateMode);
-			if (isUpdateMode && isSetQuestionListOfCommonQuestion) {
-				Boolean originalCommonQuestionThatSetByQuestionnaire = 
-						dataTransactionalService
-						.hasOriginalCommonQuestionThatSetByQuestionnaire(questionSessionList);
-				if (originalCommonQuestionThatSetByQuestionnaire != null 
-						&& !originalCommonQuestionThatSetByQuestionnaire) {
-					isSetQuestionListOfCommonQuestion = originalCommonQuestionThatSetByQuestionnaire;
-					List<Question> questionList = 
-							questionService.getQuestionList(questionnaireIdStr, true);
-					if (questionList == null) {
-						throw new Exception(RtnInfo.NOT_FOUND.getMessage());
-					}
-					List<QuestionSession> builtQuestionSessionList = 
-							questionSessionService.getQuestionSessionList(questionList);
-					questionSessionService.setQuestionSessionList(session, builtQuestionSessionList);
-					questionSessionList = 
-							questionSessionService.getQuestionSessionList(session);
-					if (questionSessionList == null) {
-						throw new Exception(RtnInfo.FAILED.getMessage());
-					} 
-				}
-			}
-			session.setAttribute(
-					SessionConstant.Name.IS_SET_QUESTION_LIST_OF_COMMON_QUESTION, 
-					isSetQuestionListOfCommonQuestion
-					);
 			boolean isOverDateOrHasUser = 
 					dataTransactionalService
 					.isOverDateOrHasUser(questionnaireSession, userListInSession);

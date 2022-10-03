@@ -6,14 +6,6 @@
 function SetContainerShowStateSession(strSessionName, strShowState) {
     sessionStorage.setItem(strSessionName, strShowState);
 }
-/**
- * 設置是否套用常用問題於問卷上之現在狀態，藉由Session名稱和現在狀態。
- * @param String Session名稱
- * @param String 現在狀態 (setState/notSetState)
- */
-function SetElementCurrentStateSession(strSessionName, strCurrentState) {
-    sessionStorage.setItem(strSessionName, strCurrentState);
-}
 
 /**
  * 取得問卷其問題輸入控制項資料。
@@ -76,68 +68,6 @@ function CheckQuestionInputs(objQuestion) {
 }
 
 /**
- * 重置問卷輸入控制項資料。
- */
-function ResetQuestionnaireInputs() {
-    let result = FormatDate(Date.now());
-	let temp = GetDefaultObjQuestionnaire();
-	
-    temp.startDate = result;
-    SetQuestionnaireInputs(temp);
-}
-/**
- * 取得問卷回應Body，藉由問卷Id。
- * @param String 問卷Id
- */
-function GetQuestionnaire(strQuestionnaireId) {
-    let objPostData = { [DataProperty.QUESTIONNAIRE_ID.key]: strQuestionnaireId };
-
-    $.ajax({
-        url: `${JAVA_SERVICE_DOMAIN}/getQuestionnaire`,
-        method: METHOD_POST,
-        contentType: APPLICATION_JSON,
-        dataType: DATA_TYPE_JSON,
-        data: JSON.stringify(objPostData),
-        success: function (objQuestionnaireResp) {
-            let { status_code, message, questionnaire_session } = objQuestionnaireResp;
-
-            if (status_code === RtnInfo.NOT_FOUND.statusCode
-                || message === RtnInfo.NOT_FOUND.message) {
-                alert(RtnInfo.NOT_FOUND.message);
-            }
-            else if (status_code === RtnInfo.FAILED.statusCode
-                || message === RtnInfo.FAILED.message) {
-                alert(RtnInfo.FAILED.message);
-            }
-            else if (status_code === RtnInfo.SUCCESSFUL.statusCode
-                && message === RtnInfo.SUCCESSFUL.message
-                && !questionnaire_session) {
-				let temp = GetDefaultObjQuestionnaire();
-                temp.startDate = FormatDate(new Date());
-                temp.endDate = null;
-                temp.isEnable = true;
-                SetQuestionnaireInputs(temp);
-            }
-            else if (!questionnaire_session) {
-                alert(RtnInfo.FAILED.message);
-            }
-            else {
-                let { startDate, endDate, isEnable } = questionnaire_session;
-
-                questionnaire_session.startDate = FormatDate(HasText(startDate) ? startDate : new Date());
-                questionnaire_session.endDate = HasText(endDate) ? FormatDate(endDate) : null;
-                questionnaire_session.isEnable = isEnable == null ? true : isEnable;
-                SetQuestionnaireInputs(questionnaire_session);
-            }
-        },
-        error: function (msg) {
-            console.log(msg);
-            alert(errorMessageOfAjax);
-        },
-    });
-}
-
-/**
  * 設置問題種類其種類名稱為常用問題之Id於Session，藉由種類名稱(自訂問題/常用問題)和Session名稱。
  * @param String 種類名稱(自訂問題/常用問題)
  * @param String Session名稱
@@ -160,43 +90,23 @@ function SetCommonQuestionOfCategoryId(
 	return defer.promise();
 }
 /**
- * 顯示或隱藏問題種類其種類名稱為常用問題於下拉選單，藉由是否套用常用問題於問卷上之現在狀態。
+ * 隱藏問題種類其種類名稱為常用問題於下拉選單，藉由是否套用常用問題於問卷上之現在狀態。
  */
-function ShowOrHideCommonQuestionOfCategory() {
+function HideCommonQuestionOfCategory() {
 	let defer = $.Deferred();
 	try {
-		let strCurrentSetCommonQuestionOnQuestionnaireState =
-            sessionStorage.getItem(currentSetCommonQuestionOnQuestionnaireState);
 	    let strCurrentCommonQuestionOfCategoryId =
 	        sessionStorage.getItem(currentCommonQuestionOfCategoryId);
-	    if (strCurrentSetCommonQuestionOnQuestionnaireState === setState) {
 	        $(selectCategoryList 
 	        	+ " option[value='" 
 	        	+ strCurrentCommonQuestionOfCategoryId 
-	        	+ "']").show();
-		}
-	    else {
-			$(selectCategoryList 
-				+ " option[value='" 
-				+ strCurrentCommonQuestionOfCategoryId 
-				+ "']").hide();
-		}
+	        	+ "']").hide();
 		defer.resolve();
 	} catch (e) {
-		console.log(`Show or hide common question of category error: ${e}`)
+		console.log(`Hide common question of category error: ${e}`)
 		defer.reject();
 	}
 	return defer.promise();
-}
-/**
- * 隱藏擁有目標Id的問題種類於下拉選單，藉由問題種類Id。
- * @param String 問題種類Id
- */
-function HideCategoryInSelectCategoryList(strCategoryId) {
-	$(selectCategoryList 
-    	+ " option[value='" 
-    	+ strCategoryId 
-    	+ "']").hide();
 }
 /**
  * 選擇擁有目標種類名稱的問題種類於下拉選單，藉由種類名稱(自訂問題/常用問題)。
@@ -207,151 +117,18 @@ function SelectCategoryInSelectCategoryList(strCategoryName = customizedQuestion
         return $(this).text() === strCategoryName;
     }).prop("selected", true);
 }
-/**
- * 取得問卷其問題列表回應Body，藉由問卷Id。
- * @param String 問卷Id
- */
-function GetQuestionList(strQuestionnaireId) {
-    let objPostData = { [DataProperty.QUESTIONNAIRE_ID.key]: strQuestionnaireId };
-
-    $.ajax({
-        url: `${JAVA_SERVICE_DOMAIN}/getQuestionList`,
-        method: METHOD_POST,
-        contentType: APPLICATION_JSON,
-        dataType: DATA_TYPE_JSON,
-        data: JSON.stringify(objPostData),
-        success: function (objArrQuestionResp) {
-            let { status_code, message, question_session_list } = objArrQuestionResp;
-            ResetQuestionInputs();
-            $(btnDeleteQuestion).hide();
-            $(divQuestionListContainer).empty();
-
-            if (status_code === RtnInfo.NOT_FOUND.statusCode
-                || message === RtnInfo.NOT_FOUND.message) {
-                alert(RtnInfo.NOT_FOUND.message);
-                $(divQuestionListContainer).append(WrapMessageWithHtmlTag(RtnInfo.FAILED.message));
-            }
-            else if (status_code === RtnInfo.FAILED.statusCode
-                || message === RtnInfo.FAILED.message) {
-                alert(RtnInfo.FAILED.message);
-                $(divQuestionListContainer).append(WrapMessageWithHtmlTag(RtnInfo.FAILED.message));
-            }
-            else if (!question_session_list || !question_session_list.length) {
-				
-			}
-            else {
-                ShowQuestionListByIsDeleted(question_session_list, true);
-            }
-        },
-        error: function (msg) {
-            console.log(msg);
-            alert(errorMessageOfAjax);
-        },
-    });
-}
 
 /**
- * 取得後端Session之是否套用常用問題其問題列表於問卷上後，設置於前端Session，接著相應地重置問卷其問題輸入控制項資料。
+ * 顯示常用問題其問題於輸入控制項上，藉由種類Id。
+ * @param String 種類Id
  * @return Promise promise
  */
-function GetIsSetQuestionListOfCommonQuestion() {
+function ShowToAddQuestionOfCommonQuestion(strCategoryId) {
+	let objPostData = { [DataProperty.CATEGORY_ID.key]: strCategoryId };
 	let defer = $.Deferred();
 	
 	$.ajax({
-        url: `${JAVA_SERVICE_DOMAIN}/getIsSetQuestionListOfCommonQuestion`,
-        method: METHOD_GET,
-        success: function (strIsSet) {
-			ResetQuestionInputs();
-			
-			if (strIsSet === RtnInfo.FAILED.message) {
-				alert(RtnInfo.FAILED.message);
-				defer.reject();
-			}
-			else if (strIsSet === "false") {
-				SetElementCurrentStateSession(
-                    currentSetCommonQuestionOnQuestionnaireState,
-                    notSetState
-                );
-                defer.resolve();
-			}
-			else if (strIsSet === "true") {
-				SetElementCurrentStateSession(
-                    currentSetCommonQuestionOnQuestionnaireState,
-                    setState
-                );
-				ResetQuestionInputs(commonQuestionOfCategory);
-                defer.resolve();
-			}
-			else {
-				alert(RtnInfo.FAILED.message);
-				defer.reject();
-			}
-        },
-        error: function (msg) {
-            console.log(msg);
-            alert(errorMessageOfAjax);
-            defer.reject();
-        }
-    });
-    
-    return defer.promise();
-}
-/**
- * 設置是否套用常用問題其問題列表於問卷上之狀態於後端Session。
- * @param Boolean 是否套用常用問題其問題列表於問卷上
- * @return Promise promise
- */
-function SetIsSetQuestionListOfCommonQuestion(boolIsSet) {
-	let strQueryString = `?is_set=${boolIsSet}`;
-	let defer = $.Deferred();
-	
-	$.ajax({
-        url: `${JAVA_SERVICE_DOMAIN}/setIsSetQuestionListOfCommonQuestion${strQueryString}`,
-        method: METHOD_POST,
-        success: function (strIsSet) {
-			if (strIsSet === RtnInfo.FAILED.message) {
-				alert(RtnInfo.FAILED.message);
-				defer.reject();
-			}
-			else if (boolIsSet === false && strIsSet === "false") {
-				SetElementCurrentStateSession(
-                    currentSetCommonQuestionOnQuestionnaireState,
-                    notSetState
-                );
-                defer.resolve();
-			}
-			else if (boolIsSet === true && strIsSet === "true") {
-				SetElementCurrentStateSession(
-                    currentSetCommonQuestionOnQuestionnaireState,
-                    setState
-                );
-                defer.resolve();
-			}
-			else {
-				alert(RtnInfo.FAILED.message);
-				defer.reject();
-			}
-        },
-        error: function (msg) {
-            console.log(msg);
-            alert(errorMessageOfAjax);
-            defer.reject();
-        }
-    });
-    
-    return defer.promise();
-}
-/**
- * 設置常用問題其問題列表於問卷上，藉由其問題種類Id。
- * @param String 常用問題其問題種類Id
- * @return Promise promise
- */
-function SetQuestionListOfCommonQuestion(strSelectedCategoryId) {
-    let objPostData = { [DataProperty.CATEGORY_ID.key]: strSelectedCategoryId };
-    let defer = $.Deferred();
-    
-    $.ajax({
-        url: `${JAVA_SERVICE_DOMAIN}/setQuestionListOfCommonQuestion`,
+        url: `${JAVA_SERVICE_DOMAIN}/showToAddQuestionOfCommonQuestion`,
         method: METHOD_POST,
         contentType: APPLICATION_JSON,
         dataType: DATA_TYPE_JSON,
@@ -361,7 +138,12 @@ function SetQuestionListOfCommonQuestion(strSelectedCategoryId) {
 				message, 
 				question_session_list } = objArrQuestionOfCommonQuestionResp;
 			
-			if (status_code === RtnInfo.PARAMETER_REQUIRED.statusCode
+            if (status_code === RtnInfo.FAILED.statusCode
+                || message === RtnInfo.FAILED.message) {
+                alert(RtnInfo.FAILED.message);
+                defer.reject();
+            }
+			else if (status_code === RtnInfo.PARAMETER_REQUIRED.statusCode
                 || message === RtnInfo.PARAMETER_REQUIRED.message) {
                 alert(RtnInfo.PARAMETER_REQUIRED.message);
                 defer.reject();
@@ -371,68 +153,18 @@ function SetQuestionListOfCommonQuestion(strSelectedCategoryId) {
                 alert(RtnInfo.NOT_FOUND.message);
                 defer.reject();
             }
-            else if (status_code === RtnInfo.FAILED.statusCode
-                || message === RtnInfo.FAILED.message) {
-                alert(RtnInfo.FAILED.message);
-                defer.reject();
-            }
             else if (!question_session_list || !question_session_list.length) {
 				alert(RtnInfo.FAILED.message);
 				defer.reject();
 			}
 			else {
-				$(btnDeleteQuestion).show();
-				$(divQuestionListContainer).empty();
-				
-				ResetQuestionInputs(commonQuestionOfCategory);
-                SetElementCurrentStateSession(
-                    currentSetCommonQuestionOnQuestionnaireState,
-                    setState
-                );
-				ShowQuestionListByIsDeleted(question_session_list, true);
+				SetQuestionInputs(question_session_list.pop());
 				defer.resolve();
 			}
         },
         error: function (msg) {
             console.log(msg);
             alert(errorMessageOfAjax);
-            defer.reject();
-        }
-    });
-    
-    return defer.promise();
-}
-/**
- * 刪除常用問題其問題列表於問卷上。
- * @return Promise promise
- */
-function DeleteSetQuestionListOfCommonQuestion() {
-	let defer = $.Deferred();
-	
-    $.ajax({
-        url: `${JAVA_SERVICE_DOMAIN}/deleteSetQuestionListOfCommonQuestion`,
-        method: METHOD_GET,
-        success: function (strRtnInfo) {
-			if (strRtnInfo === RtnInfo.FAILED.message) {
-                alert(RtnInfo.FAILED.message);
-                defer.reject();
-            }
-            else if (strRtnInfo) {
-				alert(RtnInfo.FAILED.message);
-				defer.reject();
-			}
-            else {
-				ResetQuestionInputs();
-	            $(btnDeleteQuestion).hide();
-	            $(divQuestionListContainer).empty();
-				$(divQuestionListContainer).append(emptyMessageOfList);
-				defer.resolve();
-			}
-        },
-        error: function (msg) {
-            console.log(msg);
-            alert(errorMessageOfAjax);
-            defer.reject();
         }
     });
     

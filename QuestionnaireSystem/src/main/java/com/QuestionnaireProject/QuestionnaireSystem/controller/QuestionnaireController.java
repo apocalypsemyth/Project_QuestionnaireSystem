@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,84 +43,6 @@ public class QuestionnaireController {
 	
 	@Autowired
 	private DataTransactionalService dataTransactionalService;
-	
-	@PostMapping(value = "/getQuestionnaire", 
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	
-	public QuestionnaireResp getQuestionnaire(
-			@RequestBody PostQuestionnaireReq req, 
-			HttpSession session
-			) {
-		QuestionnaireSession questionnaireSessionResp = new QuestionnaireSession();
-		String questionnaireId = req.getQuestionnaireId();
-		Boolean isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
-		try {
-			if (isUpdateMode == null) {
-				if (!StringUtils.hasText(questionnaireId)) {
-					session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, false);
-					return new QuestionnaireResp(
-							RtnInfo.SUCCESSFUL.getCode(), 
-							RtnInfo.SUCCESSFUL.getMessage(),
-							null
-							);
-				}
-				session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, true);
-				isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
-			}
-			
-			QuestionnaireSession questionnaireSession = 
-					questionnaireSessionService.getQuestionnaireSession(session);
-			if (isUpdateMode) {
-				if (questionnaireSession == null) {
-					Questionnaire questionnaire = 
-							questionnaireService.getQuestionnaire(questionnaireId);
-					if (questionnaire == null) {
-						return new QuestionnaireResp(
-								RtnInfo.NOT_FOUND.getCode(), 
-								RtnInfo.NOT_FOUND.getMessage(),
-								null
-								);
-					}
-					questionnaireSessionService
-					.setQuestionnaireSession(session, new QuestionnaireSession(questionnaire));
-					questionnaireSession =
-							questionnaireSessionService.getQuestionnaireSession(session);
-					if (questionnaireSession == null) {
-						return new QuestionnaireResp(
-								RtnInfo.FAILED.getCode(), 
-								RtnInfo.FAILED.getMessage(),
-								null
-								);
-					}
-					return new QuestionnaireResp(
-							RtnInfo.SUCCESSFUL.getCode(), 
-							RtnInfo.SUCCESSFUL.getMessage(),
-							questionnaireSession
-							);
-				}
-				return new QuestionnaireResp(
-						RtnInfo.SUCCESSFUL.getCode(), 
-						RtnInfo.SUCCESSFUL.getMessage(),
-						questionnaireSession
-						);
-			}
-			
-			questionnaireSessionResp = questionnaireSession;
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return new QuestionnaireResp(
-					RtnInfo.FAILED.getCode(), 
-					RtnInfo.FAILED.getMessage(),
-					null
-					);
-		}
-		return new QuestionnaireResp(
-				RtnInfo.SUCCESSFUL.getCode(), 
-				RtnInfo.SUCCESSFUL.getMessage(),
-				questionnaireSessionResp
-				);
-	}
 	
 	@GetMapping(value = "/getQuestionnaireList", 
 			consumes = MediaType.APPLICATION_JSON_VALUE,

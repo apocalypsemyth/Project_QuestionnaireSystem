@@ -10,8 +10,10 @@ class RtnInfo {
     static SESSION_EXPIRED = new RtnInfo("512", "操作時間過長，請再嘗試。");
     // 更新模式時，刪除全部資料，只是被標記刪除，沒有真的刪掉於Session。
     static NOT_EMPTY_EMPTY = new RtnInfo("666", "Update mode empty");
-    static ONE_QUESTION = new RtnInfo("667", "請加入至少一個問題");
-    static ONE_REQUIRED_QUESTION = new RtnInfo("668", "請加入至少一個必填問題");
+    static ONE_QUESTION = new RtnInfo("667", "請加入至少一個問題。");
+    static ONE_REQUIRED_QUESTION = new RtnInfo("668", "請加入至少一個必填問題。");
+    static JUST_ONE_QUESTION = new RtnInfo("669", "只能加入一個問題。");
+    static NAME_OF_COMMON_QUESTION_IS_CUSTOMIZED_QUESTION = new RtnInfo("670", "常用問題其名稱不得為自訂問題。");
 
     constructor(statusCode, message) {
         this.statusCode = statusCode;

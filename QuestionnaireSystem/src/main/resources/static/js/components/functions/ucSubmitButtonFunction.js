@@ -10,8 +10,6 @@ function HasQuestionSession() {
         url: `${JAVA_SERVICE_DOMAIN}/hasQuestionSession`,
         method: METHOD_GET,
         success: function (strRtnInfo) {
-			//test
-			console.log("HasQuestionSession");
             if (strRtnInfo === RtnInfo.ONE_QUESTION.message) {
                 alert(RtnInfo.ONE_QUESTION.message);
                 return;

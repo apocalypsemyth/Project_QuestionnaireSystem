@@ -172,16 +172,4 @@ public interface ModelService {
 			boolean hasCommonQuestionThatSetByQuestionnaire
 			) throws Exception;
 	
-	/**
-	 * 設置錯誤資訊，以顯示於警告視窗上。
-	 * @param Model model
-	 * @param String 錯誤資訊
-	 * @return Model model
-	 * @throws 設置錯誤資訊時，發生錯誤。
-	 */
-	public Model setErrorMessage(
-			Model model,
-			String errorMessage
-			) throws Exception;
-	
 }

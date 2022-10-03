@@ -63,11 +63,16 @@ public class QuestionSession extends BaseCUDProp implements IForHtmlMethod {
 		super.setIsDeleted(false);
 	}
 	
-	public QuestionSession(PostQuestionReq postQuestionReq, boolean isQuestionnaire) {
+	// ‘nŒš–â‘èSession
+	public QuestionSession(
+			PostQuestionReq postQuestionReq, 
+			boolean isQuestionnaire, 
+			boolean isFromCommonQuestion
+			) {
 		this.questionId = UUID.randomUUID();
 		this.questionnaireId = 
-				isQuestionnaire 
-				? UUID.fromString(postQuestionReq.getQuestionnaireId()) 
+				isQuestionnaire || isFromCommonQuestion
+				? UUID.fromString(postQuestionReq.getQuestionnaireId())
 				: UUID.randomUUID();
 		this.questionCategory = postQuestionReq.getQuestionCategory();
 		this.questionTyping = postQuestionReq.getQuestionTyping();
