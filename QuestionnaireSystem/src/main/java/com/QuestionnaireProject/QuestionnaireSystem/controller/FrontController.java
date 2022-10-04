@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -55,30 +54,6 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	private ModelService modelService;
-	
-	@GetMapping("/{anyPath}")
-	public String getFrontAnyPath(
-			@PathVariable String anyPath
-			) {
-		if (anyPath.equals(UrlConstant.Path.QUESTIONNAIRE_LIST)) {
-			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
-		}
-		else if (anyPath.equals(UrlConstant.Path.ANSWERING_QUESTIONNAIRE_DETAIL)) {
-			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Path.ANSWERING_QUESTIONNAIRE_DETAIL;
-		}
-		else if (anyPath.equals(UrlConstant.Path.CHECKING_QUESTIONNAIRE_DETAIL)) {
-			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Path.CHECKING_QUESTIONNAIRE_DETAIL;
-		}
-		else if (anyPath.equals(UrlConstant.Path.QUESTIONNAIRE_STATISTICS)) {
-			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Path.QUESTIONNAIRE_STATISTICS;
-		}
-		else
-			return UrlConstant.Path.NOT_FOUND;
-	}
 	
 	// front
 	@GetMapping(UrlConstant.Path.QUESTIONNAIRE_LIST)

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -87,34 +86,6 @@ public class BackAdminController {
 	
 	@Autowired
 	private ModelService modelService;
-	
-	@GetMapping("/{anyPath}")
-	public String getBackAdminAnyPath(
-			@PathVariable String anyPath
-			) {
-		if (anyPath.equals(UrlConstant.Path.QUESTIONNAIRE_LIST)) {
-			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Path.BACK_ADMIN 
-					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
-		}
-		else if (anyPath.equals(UrlConstant.Path.QUESTIONNAIRE_DETAIL)) {
-			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Path.BACK_ADMIN 
-					+ UrlConstant.Path.QUESTIONNAIRE_DETAIL;
-		}
-		else if (anyPath.equals(UrlConstant.Path.COMMON_QUESTION_LIST)) {
-			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Path.BACK_ADMIN 
-					+ UrlConstant.Path.COMMON_QUESTION_LIST;
-		}
-		else if (anyPath.equals(UrlConstant.Path.COMMON_QUESTION_DETAIL)) {
-			return UrlConstant.Control.REDIRECT 
-					+ UrlConstant.Path.BACK_ADMIN 
-					+ UrlConstant.Path.COMMON_QUESTION_DETAIL;
-		}
-		else
-			return UrlConstant.Path.NOT_FOUND;
-	}
 	
 	@GetMapping(UrlConstant.Path.QUESTIONNAIRE_LIST)
 	public String getBackAdminQuestionnaireList(
