@@ -133,8 +133,13 @@ public class BackAdminController {
 				throw new Exception("isUpdateMode session is null");
 			boolean isValidQueryString = 
 					dataTransactionalService.isValidQueryString(request, null);
-			if (isUpdateMode && !StringUtils.hasText(request.getQueryString())) {
+			boolean hasQueryString = StringUtils.hasText(request.getQueryString());
+			if (isUpdateMode && !hasQueryString) {
 				throw new Exception("Query string must be have in update mode");
+			}
+			if (!isUpdateMode && hasQueryString) {
+				session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, hasQueryString);
+				isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
 			}
 			if (!isValidQueryString)
 				throw new Exception("Query string is invalid");
@@ -277,8 +282,13 @@ public class BackAdminController {
 				throw new Exception("isUpdateMode session is null");
 			boolean isValidQueryString = 
 					dataTransactionalService.isValidQueryString(request, null);
-			if (isUpdateMode && !StringUtils.hasText(request.getQueryString())) {
+			boolean hasQueryString = StringUtils.hasText(request.getQueryString());
+			if (isUpdateMode && !hasQueryString) {
 				throw new Exception("Query string must be have in update mode");
+			}
+			if (!isUpdateMode && hasQueryString) {
+				session.setAttribute(SessionConstant.Name.IS_UPDATE_MODE, hasQueryString);
+				isUpdateMode = (Boolean) session.getAttribute(SessionConstant.Name.IS_UPDATE_MODE);
 			}
 			if (!isValidQueryString)
 				throw new Exception("Query string is invalid");
