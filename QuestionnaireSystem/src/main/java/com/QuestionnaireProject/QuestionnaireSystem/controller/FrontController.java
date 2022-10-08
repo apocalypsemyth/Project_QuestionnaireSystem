@@ -62,6 +62,7 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			RedirectAttributes redirectAttributes
 			) throws Exception {
 		try {
+			model = modelService.setPageTitle(model, PageConstant.Title.INDEX);
 			return UrlConstant.Control.REDIRECT 
 					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
 		} catch (Exception e) {
