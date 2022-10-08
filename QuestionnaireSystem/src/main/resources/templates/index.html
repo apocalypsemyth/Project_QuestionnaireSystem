@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+    <title>[[${pageTitle}]]</title>
+	<script th:inline="javascript">
+	   var message = /*[[${errorMessage}]]*/"";
+	   if(message != null) alert(message);
+	</script>
+</head>
+<body>
+</body>
+</html>
