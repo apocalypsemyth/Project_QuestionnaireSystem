@@ -9,5 +9,5 @@ let arrQueryParamKey = [
 let executeFuncWithUcPager;
 
 // ucPager Component控制項
-let divUcPagerContainer = "#divUcPagerContainer";
-let aLinkUcPager = "a[id*=aLinkUcPager]";
+const divUcPagerContainer = "#divUcPagerContainer";
+const aLinkUcPager = "a[id*=aLinkUcPager]";

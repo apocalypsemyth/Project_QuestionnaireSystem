@@ -17,26 +17,30 @@ const GetQueryParamVal = function (strQueryParamKey) {
  */
 const HandleUcPagerEdge = function (strPageIndex) {
     let strResultPageIndex = "";
-    let intTempPageIndex = 0;
+    let strCurrentPageIndex = GetQueryParamVal("index");
+    let intCurrentPageIndex = 
+    	HasText(strCurrentPageIndex) 
+    	? Number(strCurrentPageIndex) 
+    	: 1;
 
     if (strPageIndex === "First")
         strResultPageIndex = "1";
     else if (strPageIndex === "Prev") {
-        intTempPageIndex = intPageIndex - 1;
+        intCurrentPageIndex = intCurrentPageIndex - 1;
         strResultPageIndex =
-            intTempPageIndex <= 0
+            intCurrentPageIndex <= 0
                 ? "1"
-                : intTempPageIndex.toString();
+                : intCurrentPageIndex.toString();
     }
     else if (strPageIndex === "Next") {
-        intTempPageIndex = intPageIndex + 1;
+        intCurrentPageIndex = intCurrentPageIndex + 1;
         strResultPageIndex =
-            intPageIndex < intTempPageIndex
+            intPageIndex < intCurrentPageIndex
                 ? intPageIndex.toString()
-                : intTempPageIndex;
+                : intCurrentPageIndex.toString();
     }
     else if (strPageIndex === "Last") {
-        strResultPageIndex = intPageIndex;
+        strResultPageIndex = intPageIndex.toString();
     }
     else {
         strResultPageIndex = strPageIndex;
