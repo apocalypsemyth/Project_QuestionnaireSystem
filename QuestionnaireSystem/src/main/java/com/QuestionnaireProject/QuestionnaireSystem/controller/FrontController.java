@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.QuestionnaireProject.QuestionnaireSystem.constant.ModelConstant;
+import com.QuestionnaireProject.QuestionnaireSystem.constant.PageConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.constant.SessionConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.constant.UrlConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.Question;
@@ -55,6 +56,22 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private ModelService modelService;
 	
+	@GetMapping(UrlConstant.Path.ROOT)
+	public String getFrontQuestionnaireListFromIndex(
+			Model model,
+			RedirectAttributes redirectAttributes
+			) throws Exception {
+		try {
+			return UrlConstant.Control.REDIRECT 
+					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			redirectAttributes.addFlashAttribute(ModelConstant.Key.ERROR_MESSAGE, ModelConstant.Value.FAILED);
+			return UrlConstant.Control.REDIRECT 
+					+ UrlConstant.Path.QUESTIONNAIRE_LIST;
+		}
+	}
+	
 	// front
 	@GetMapping(UrlConstant.Path.QUESTIONNAIRE_LIST)
 	public String getFrontQuestionnaireList(
@@ -62,6 +79,7 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			RedirectAttributes redirectAttributes
 			) throws Exception {
 		try {
+			model = modelService.setPageTitle(model, PageConstant.Title.QUESTIONNAIRE_LIST);
 			model = modelService.setFragmentName(model, ModelConstant.Value.DATA_LIST);
 			// For front questionnaireList page
 			model = modelService.setIsQuestionnaireList(model, true);
@@ -104,6 +122,7 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			if (!isValidQueryString)
 				throw new Exception("Query string is invalid");
 			
+			model = modelService.setPageTitle(model, PageConstant.Title.ANSWERING_QUESTIONNAIRE_DETAIL);
 			model = modelService.setFragmentName(model, ModelConstant.Value.ANSWERING_QUESTIONNAIRE_DETAIL);
 			model = modelService.setIsQuestionnaireList(model, false);
 			
@@ -148,6 +167,7 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			if (!isValidQueryString)
 				throw new Exception("Query string is invalid");
 			
+			model = modelService.setPageTitle(model, PageConstant.Title.CHECKING_QUESTIONNAIRE_DETAIL);
 			model = modelService.setFragmentName(model, ModelConstant.Value.CHECKING_QUESTIONNAIRE_DETAIL);
 			model = modelService.setIsQuestionnaireList(model, false);
 			
@@ -198,6 +218,7 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 			if (!isValidQueryString)
 				throw new Exception("Query string is invalid");
 			
+			model = modelService.setPageTitle(model, PageConstant.Title.QUESTIONNAIRE_STATISTICS);
 			model = modelService.setFragmentName(model, ModelConstant.Value.QUESTIONNAIRE_STATISTICS);
 			model = modelService.setIsQuestionnaireList(model, false);
 			

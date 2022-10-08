@@ -7,6 +7,8 @@ public class ModelConstant {
 	 */
 	public static class Key {
 		
+		public static final String PAGE_TITLE = "pageTitle";
+
 		public static final String FRAGMENT_NAME = "fragmentName";
 
 		public static final String IS_QUESTIONNAIRE_LIST = "isQuestionnaireList";

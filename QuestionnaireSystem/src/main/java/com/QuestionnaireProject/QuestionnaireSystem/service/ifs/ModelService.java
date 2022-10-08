@@ -15,6 +15,18 @@ import com.QuestionnaireProject.QuestionnaireSystem.model.QuestionnaireSession;
 public interface ModelService {
 	
 	/**
+	 * 設置頁面的標題。
+	 * @param Model model
+	 * @param String 頁面的標題
+	 * @return Model model
+	 * @throws 設置頁面的標題時，發生錯誤。
+	 */
+	public Model setPageTitle(
+			Model model, 
+			String pageTitle
+			) throws Exception;
+	
+	/**
 	 * 設置擁有目標Fragment名稱的Fragment。
 	 * @param Model model
 	 * @param String Fragment名稱

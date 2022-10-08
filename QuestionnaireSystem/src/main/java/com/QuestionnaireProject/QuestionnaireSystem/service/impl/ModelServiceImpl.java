@@ -22,6 +22,18 @@ import com.QuestionnaireProject.QuestionnaireSystem.util.DateTimeUtil;
 public class ModelServiceImpl implements ModelService {
 
 	@Override
+	public Model setPageTitle(
+			Model model, 
+			String pageTitle
+			) throws Exception {
+		try {
+			return model.addAttribute(ModelConstant.Key.PAGE_TITLE, pageTitle);
+		} catch (Exception e) {
+			throw new Exception(e);
+		}
+	}
+	
+	@Override
 	public Model setFragmentName(
 			Model model, 
 			String fragmentName

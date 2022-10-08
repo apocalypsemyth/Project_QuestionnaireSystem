@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.QuestionnaireProject.QuestionnaireSystem.constant.DataConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.constant.ModelConstant;
+import com.QuestionnaireProject.QuestionnaireSystem.constant.PageConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.constant.SessionConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.constant.UrlConstant;
 import com.QuestionnaireProject.QuestionnaireSystem.entity.Category;
@@ -93,6 +94,7 @@ public class BackAdminController {
 			RedirectAttributes redirectAttributes
 			) throws Exception {
 		try {
+			model = modelService.setPageTitle(model, PageConstant.Title.QUESTIONNAIRE_LIST);
 			model = modelService.setFragmentName(model, ModelConstant.Value.DATA_LIST);
 			model = modelService.setDataListModel(model, true, true);
 			List<Questionnaire> questionnaireList = questionnaireService.getQuestionnaireList();
@@ -144,6 +146,7 @@ public class BackAdminController {
 			if (!isValidQueryString)
 				throw new Exception("Query string is invalid");
 			
+			model = modelService.setPageTitle(model, PageConstant.Title.QUESTIONNAIRE_DETAIL);
 			model = modelService.setFragmentName(model, ModelConstant.Value.QUESTIONNAIRE_DETAIL_CONTAINER);
 			// For questionList.html aLink
 			model = modelService.setDataListModel(model, null, true);
@@ -251,6 +254,7 @@ public class BackAdminController {
 			RedirectAttributes redirectAttributes
 			) throws Exception {
 		try {
+			model = modelService.setPageTitle(model, PageConstant.Title.COMMON_QUESTION_LIST);
 			model = modelService.setFragmentName(model, ModelConstant.Value.DATA_LIST);
 			model = modelService.setDataListModel(model, true, false);
 		} catch (Exception e) {
@@ -293,6 +297,7 @@ public class BackAdminController {
 			if (!isValidQueryString)
 				throw new Exception("Query string is invalid");
 			
+			model = modelService.setPageTitle(model, PageConstant.Title.COMMON_QUESTION_DETAIL);
 			model = modelService.setFragmentName(model, ModelConstant.Value.COMMON_QUESTION_DETAIL);
 			// For questionList.html aLink
 			model = modelService.setDataListModel(model, null, false);
