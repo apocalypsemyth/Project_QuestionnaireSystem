@@ -35,12 +35,12 @@ const HandleUcPagerEdge = function (strPageIndex) {
     else if (strPageIndex === "Next") {
         intCurrentPageIndex = intCurrentPageIndex + 1;
         strResultPageIndex =
-            intPageIndex < intCurrentPageIndex
-                ? intPageIndex.toString()
+            UcPagerProperty.INT_PAGE_INDEX < intCurrentPageIndex
+                ? UcPagerProperty.INT_PAGE_INDEX.toString()
                 : intCurrentPageIndex.toString();
     }
     else if (strPageIndex === "Last") {
-        strResultPageIndex = intPageIndex.toString();
+        strResultPageIndex = new String(UcPagerProperty.INT_PAGE_INDEX);
     }
     else {
         strResultPageIndex = strPageIndex;
@@ -63,7 +63,7 @@ const CreateQueryStringForUcPager = function (strPageIndex, ...arrQueryParamVal)
     for (let i = 0; i < arrQueryParamVal.length; i++) {
         if (arrQueryParamVal[i].trim() === "" || arrQueryParamVal[i] == null) continue;
 
-        arrQueryParam.push(`${arrQueryParamKey[i]}=${arrQueryParamVal[i]}`)
+        arrQueryParam.push(`${UcPagerProperty.ARR_QUERY_PARAM_KEY.key[i]}=${arrQueryParamVal[i]}`)
     }
 
     return arrQueryParam.join("&") === ""
@@ -107,7 +107,7 @@ const CountPageIndex = function (intTotalRows, strPageSize) {
  * @param String QueryString
  */
 const CreateUcPager = function (intTotalRows, strPageSize, strQueryString) {
-    intPageIndex = CountPageIndex(intTotalRows, strPageSize);
+    UcPagerProperty.INT_PAGE_INDEX = CountPageIndex(intTotalRows, strPageSize);
     CreateHistory(strQueryString);
     
     $(divUcPagerContainer).attr("class", "d-flex align-items-center");
@@ -135,7 +135,7 @@ const CreateUcPager = function (intTotalRows, strPageSize, strQueryString) {
         `
     );
 
-    for (let i = 1; i <= intPageIndex; i++) {
+    for (let i = 1; i <= UcPagerProperty.INT_PAGE_INDEX; i++) {
         $(divUcPagerContainer).append(
             `
                 <a id="aLinkUcPager-${i}" 

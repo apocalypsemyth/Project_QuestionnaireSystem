@@ -8,7 +8,7 @@ $(document).ready(function () {
 			DeleteSessionOfUserAndUserAnswerList();
 		});
 		
-		executeFuncWithUcPager = GetQuestionnaireList;
+		UcPagerProperty.EXECUTE_FUNC_WITH_UCPAGER = GetQuestionnaireList;
 	    GetQuestionnaireList(window.location.search, false);
 	    $(btnSearchQuestionnaireList).click(function (e) {
 	        e.preventDefault();

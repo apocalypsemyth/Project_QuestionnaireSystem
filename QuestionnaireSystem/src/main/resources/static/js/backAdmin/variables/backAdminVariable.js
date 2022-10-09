@@ -18,7 +18,6 @@ const selectTypingList = "select[id=ddlTypingList]";
 const activeTab = "activeTab";
 const currentCommonQuestionOfCategoryId = "currentCommonQuestionOfCategoryId";
 const currentCommonQuestionOfCategoryShowState = "currentCommonQuestionOfCategoryShowState";
-const currentSetCommonQuestionOnQuestionnaireState = "currentSetCommonQuestionOnQuestionnaire";
 const currentUserList = "currentUserList";
 const currentUserListShowState = "currentUserListShowState";
 const currentUserListPager = "currentUserListPager";

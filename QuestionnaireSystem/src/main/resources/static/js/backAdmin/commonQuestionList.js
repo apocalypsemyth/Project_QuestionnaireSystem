@@ -12,7 +12,7 @@ $(document).ready(function () {
 			GetCommonQuestionList(window.location.search);
 		});
 		
-		executeFuncWithUcPager = GetCommonQuestionList;
+		UcPagerProperty.EXECUTE_FUNC_WITH_UCPAGER = GetCommonQuestionList;
 	    GetCommonQuestionList(window.location.search);
 	    $(btnSearchCommonQuestionList).click(function (e) {
 	        e.preventDefault();

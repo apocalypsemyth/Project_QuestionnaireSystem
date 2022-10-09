@@ -36,7 +36,7 @@ import com.QuestionnaireProject.QuestionnaireSystem.service.ifs.UserService;
 @RequestMapping(UrlConstant.Path.ROOT)
 public class FrontController {
 	
-private Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	private QuestionnaireService questionnaireService;

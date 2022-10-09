@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $(window).on("popstate", function () {
-        executeFuncWithUcPager(document.location.search);
+        UcPagerProperty.EXECUTE_FUNC_WITH_UCPAGER(document.location.search);
     });
 
     $(document).on("click", aLinkUcPager, function (e) {
@@ -10,6 +10,6 @@ $(document).ready(function () {
         let aLinkHref = $(this).attr("href");
         let strPageIndex = aLinkHref.split("?index=")[1];
         let strResult = HandleUcPagerEdge(strPageIndex);
-        executeFuncWithUcPager(strResult, isBackAdmin);
+        UcPagerProperty.EXECUTE_FUNC_WITH_UCPAGER(strResult, isBackAdmin);
     });
 });

@@ -8,7 +8,6 @@ $(document).ready(function () {
 			DeleteQuestionnaireSession();
 			DeleteSessionOfListOfUserAndUserAnswer();
 			sessionStorage.removeItem(activeTab);
-			sessionStorage.removeItem(currentSetCommonQuestionOnQuestionnaireState);
         	sessionStorage.removeItem(currentCommonQuestionOfCategoryId);
 	        sessionStorage.removeItem(currentUserList);
 	        sessionStorage.removeItem(currentUserListShowState);
@@ -21,7 +20,7 @@ $(document).ready(function () {
 			GetQuestionnaireList(window.location.search, true);
 		});
 		
-		executeFuncWithUcPager = GetQuestionnaireList;
+		UcPagerProperty.EXECUTE_FUNC_WITH_UCPAGER = GetQuestionnaireList;
     	GetQuestionnaireList(window.location.search, true);
 	    $(btnSearchQuestionnaireList).click(function (e) {
 	        e.preventDefault();
